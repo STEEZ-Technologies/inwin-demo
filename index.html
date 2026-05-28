@@ -5,16 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <meta name="theme-color" content="#080808">
 <title>INWIN — Digital Catalogue · steez.digital</title>
-<!-- DNS prefetch for OSS -->
-<link rel="preconnect" href="https://steez-models.oss-cn-hongkong.aliyuncs.com">
-<link rel="dns-prefetch" href="https://steez-models.oss-cn-hongkong.aliyuncs.com">
-<link rel="preconnect" href="https://cdn.jsdelivr.net">
-<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-<!-- Google Fonts → fonts.loli.net (China mirror, unblocked) -->
 <link rel="preconnect" href="https://fonts.loli.net">
+<link rel="preconnect" href="https://gstatic.loli.net" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link href="https://fonts.loli.net/css2?family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<!-- Three.js: jsdelivr (China CDN nodes) instead of blocked cloudflare -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -1081,7 +1076,10 @@ body{padding-top:68px}
   <div class="hdr-inner">
     <!-- Logo -->
     <a class="hdr-logo" href="#hero" onclick="document.getElementById('hero').scrollIntoView({behavior:'smooth'});return false;">
-      <img src="collections_pics/logo.png" alt="inWin" style="height:56px;width:auto;display:block;">
+      <picture>
+        <source srcset="collections_pics/logo.webp" type="image/webp">
+        <img src="collections_pics/logo.png" alt="inWin" style="height:56px;width:auto;display:block;">
+      </picture>
     </a>
     <!-- Nav -->
     <ul class="hdr-nav">
@@ -1110,7 +1108,10 @@ body{padding-top:68px}
 <!-- ─── LOADER ─── -->
 <div id="loader">
   <div class="loader-logo-wrap">
-    <img src="collections_pics/logo.png" alt="inWin" style="height:90px;width:auto;display:block;opacity:0;animation:fadeIn 0.8s 0.3s ease forwards;">
+    <picture>
+      <source srcset="collections_pics/logo.webp" type="image/webp">
+      <img src="collections_pics/logo.png" alt="inWin" style="height:90px;width:auto;display:block;opacity:0;animation:fadeIn 0.8s 0.3s ease forwards;">
+    </picture>
     <div class="loader-since">— Since 1979 —</div>
     <div class="loader-line"></div>
     <div class="loader-tag">Digital Catalogue · steez.digital</div>
@@ -1120,10 +1121,10 @@ body{padding-top:68px}
 <!-- ─── HERO ─── -->
 <section id="hero">
   <div class="hero-slides">
-    <div class="hero-slide" style="background-image:url('https://steez-models.oss-cn-hongkong.aliyuncs.com/header.webp')"></div>
-    <div class="hero-slide" style="background-image:url('https://steez-models.oss-cn-hongkong.aliyuncs.com/cook_header.webp')"></div>
-    <div class="hero-slide" style="background-image:url('https://steez-models.oss-cn-hongkong.aliyuncs.com/pot_header.webp')"></div>
-    <div class="hero-slide" style="background-image:url('collections_pics/scissors_header.png')"></div>
+    <div class="hero-slide" style="background-image:url('collections_pics/header.jpg')"></div>
+    <div class="hero-slide" style="background-image:url('collections_pics/cook_header.jpg')"></div>
+    <div class="hero-slide" style="background-image:url('collections_pics/pot_header.jpg')"></div>
+    <div class="hero-slide" style="background-image:url('collections_pics/scissors_header.jpg')"></div>
   </div>
   <div class="hero-grain"></div>
   <div class="hero-lines"></div>
@@ -1413,7 +1414,7 @@ body{padding-top:68px}
 <section id="our-craft">
   <div class="craft-top">
     <div class="craft-img-col">
-      <img src="https://steez-models.oss-cn-hongkong.aliyuncs.com/Delta_Series_2-Piece_Prep_Set.webp" alt="Master Bladesmith" class="craft-photo">
+      <img src="collections_pics/Delta%20Series%2C%202-Piece%20Prep%20Set.jpg" alt="Master Bladesmith" class="craft-photo">
     </div>
     <div class="craft-text-col">
       <p class="craft-label" id="i-craft-label">Our Craft</p>
@@ -1438,7 +1439,7 @@ body{padding-top:68px}
   <div class="craft-products">
     <div class="craft-prod-card">
       <div class="craft-prod-img-wrap">
-        <img src="collections_pics/v-form.png" alt="V-Form Chef's 8&quot;">
+        <img src="collections_pics/v-form.jpg" alt="V-Form Chef's 8&quot;">
       </div>
       <div class="craft-prod-info">
         <span class="craft-prod-name" id="i-craft-prod1-name">V-FORM CHEF'S 8"</span>
@@ -1447,7 +1448,7 @@ body{padding-top:68px}
     </div>
     <div class="craft-prod-card">
       <div class="craft-prod-img-wrap">
-        <img src="https://steez-models.oss-cn-hongkong.aliyuncs.com/dragon.webp" alt="Dragon Nakiri 6.5&quot;">
+        <img src="collections_pics/dragon.jpg" alt="Dragon Nakiri 6.5&quot;">
       </div>
       <div class="craft-prod-info">
         <span class="craft-prod-name" id="i-craft-prod2-name">DRAGON NAKIRI 6.5"</span>
@@ -1971,7 +1972,7 @@ const CATEGORIES = [
   {
     id:'mts', name:'COLORED KNIVES', num:'01', glb:'https://steez-models.oss-cn-hongkong.aliyuncs.com/kitchen_knife.glb',
     specs:{steel:'German 1.4116',hardness:'58 HRC',edge:'15° per side',handle:'Full tang Pakkawood'},
-    photo:'https://steez-models.oss-cn-hongkong.aliyuncs.com/colored_knives.webp',
+    photo:'collections_pics/colored_knives.jpg',
     tagline:'Where Precision Meets Artistry',
     desc:'Anodized aluminum and G10 handles in four signature colors. Forged from premium powder steel, honed to perfection. Paired with its bespoke magnetic stand.',
     gradient:'linear-gradient(160deg,#0d1a2e 0%,#1a2d4a 40%,#0a1525 100%)',
@@ -1986,7 +1987,7 @@ const CATEGORIES = [
   {
     id:'vform', name:'V-FORM', num:'02', glb:'https://steez-models.oss-cn-hongkong.aliyuncs.com/kitchen_knife.glb',
     specs:{steel:'German 1.4116',hardness:'58 HRC',edge:'15° per side',handle:'G10 composite'},
-    photo:'collections_pics/v-form.png',
+    photo:'collections_pics/v-form.jpg',
     tagline:'Patented · Redefining the Art of the Blade',
     desc:'Patented V-shaped design meets a commanding G10 handle. Black powder steel, silky smooth cutting edge. Powder Steel · Timeless Stainless · Sharp today, sharp always.',
     gradient:'linear-gradient(160deg,#0a0505 0%,#1c0808 40%,#2a0d0d 100%)',
@@ -2003,7 +2004,7 @@ const CATEGORIES = [
   {
     id:'damascus', name:'DAMASCUS', num:'03', glb:'https://steez-models.oss-cn-hongkong.aliyuncs.com/knife_damascus.glb',
     specs:{steel:'VG-10 core / Damascus',hardness:'60 HRC',edge:'12° per side',handle:'Multi-colour resin'},
-    photo:'https://steez-models.oss-cn-hongkong.aliyuncs.com/damascus.webp',
+    photo:'collections_pics/damascus.jpg',
     tagline:'Beneath the Edge · A Thousand Layers',
     desc:'Damascus steel with resin composite handles. Each blade holds the secret of a thousand layers — available in blue, green, red, white and abalone. Art worth lingering over.',
     gradient:'linear-gradient(160deg,#0d0818 0%,#1a0d2e 40%,#0d0a18 100%)',
@@ -2017,7 +2018,7 @@ const CATEGORIES = [
   {
     id:'dragon', name:'DRAGON', num:'04', glb:'https://steez-models.oss-cn-hongkong.aliyuncs.com/kitchen_knife.glb',
     specs:{steel:'VG-10 core / Damascus',hardness:'60 HRC',edge:'12° per side',handle:'Rosewood / Resin'},
-    photo:'https://steez-models.oss-cn-hongkong.aliyuncs.com/dragon.webp',
+    photo:'collections_pics/dragon.jpg',
     tagline:'Red Dot Award · Design Excellence Redefined',
     desc:'Winner of the prestigious Red Dot Award. Interchangeable modular handles, dragon-engraved stainless blade. An art piece for your kitchen — detachable gift box included.',
     gradient:'linear-gradient(160deg,#150800 0%,#2d1200 40%,#1a0a00 100%)',
@@ -2031,7 +2032,7 @@ const CATEGORIES = [
   },
   {
     id:'boards', name:'CUTTING BOARD', num:'05', glb:'https://steez-models.oss-cn-hongkong.aliyuncs.com/cutting_board.glb',
-    photo:'https://steez-models.oss-cn-hongkong.aliyuncs.com/cutting_board.webp',
+    photo:'collections_pics/cutting_board.jpg',
     tagline:'Natural Luxury · Ages Beautifully',
     desc:'From the innovative iPad-style magnetic flip board to premium North American Black Walnut. Function meets fine material, beautifully.',
     gradient:'linear-gradient(160deg,#180e04 0%,#3d2008 40%,#251408 100%)',
@@ -2043,7 +2044,7 @@ const CATEGORIES = [
   },
   {
     id:'cookware', name:'POTS', num:'06', glb:'https://steez-models.oss-cn-hongkong.aliyuncs.com/stainless_steel_cooking_pot.glb',
-    photo:'https://steez-models.oss-cn-hongkong.aliyuncs.com/pots.webp',
+    photo:'collections_pics/pots.jpg',
     tagline:'Master Your Kitchen',
     desc:'From the Micro-Pressure Wok to 3-Layer Stainless cookware sets. Compatible with all stoves, induction-ready, dishwasher safe.',
     gradient:'linear-gradient(160deg,#070d18 0%,#0f1a2e 40%,#0a1020 100%)',
@@ -2056,7 +2057,7 @@ const CATEGORIES = [
   },
   {
     id:'scissors', name:'SCISSORS', num:'07', glb:'https://steez-models.oss-cn-hongkong.aliyuncs.com/kitchen_scissors.glb',
-    photo:'collections_pics/scissors.png',
+    photo:'collections_pics/scissors.jpg',
     tagline:'Precision Cutting · Professional Grade',
     desc:'Multi-purpose kitchen scissors engineered for professional use. From heavy-duty poultry shears to 5-blade herb scissors — forged stainless steel, ergonomic handles, dishwasher safe.',
     gradient:'linear-gradient(160deg,#080d10 0%,#0d1c22 40%,#060e12 100%)',
@@ -2070,7 +2071,7 @@ const CATEGORIES = [
   },
   {
     id:'streamline', name:'STREAMLINE', num:'08', glb:'https://steez-models.oss-cn-hongkong.aliyuncs.com/kitchen_knife.glb',
-    photo:'collections_pics/streamline.png',
+    photo:'collections_pics/streamline.jpg',
     tagline:'Clean Lines · Uncompromising Edge',
     desc:'A minimalist knife series defined by seamless silhouettes and a mirror-polished blade. Ergonomic full-tang construction, balanced for all-day professional use.',
     gradient:'linear-gradient(160deg,#0a0a0c 0%,#141418 40%,#0a0a0c 100%)',
@@ -2113,35 +2114,35 @@ var ZH_COLORS = {
 };
 
 var PRODUCT_PHOTOS = {
-  mts1:'https://steez-models.oss-cn-hongkong.aliyuncs.com/chiefs_knife.webp',
-  mts2:'https://steez-models.oss-cn-hongkong.aliyuncs.com/utility_knife.webp',
-  mts3:'https://steez-models.oss-cn-hongkong.aliyuncs.com/paring_knife.webp',
-  mts4:'https://steez-models.oss-cn-hongkong.aliyuncs.com/magnetic_stand.webp',
-  vf1:'https://steez-models.oss-cn-hongkong.aliyuncs.com/chiefs_vform.webp',
-  vf2:'https://steez-models.oss-cn-hongkong.aliyuncs.com/carving_vform.webp',
-  vf3:'https://steez-models.oss-cn-hongkong.aliyuncs.com/bread_vform.webp',
-  vf4:'https://steez-models.oss-cn-hongkong.aliyuncs.com/utility_vform.webp',
-  vf5:'https://steez-models.oss-cn-hongkong.aliyuncs.com/paring_vform.webp',
-  vf6:'https://steez-models.oss-cn-hongkong.aliyuncs.com/cleaver_vfrom.webp',
-  dam1:'https://steez-models.oss-cn-hongkong.aliyuncs.com/chiefs_damascus.webp',
-  dam2:'https://steez-models.oss-cn-hongkong.aliyuncs.com/santoku_damascus.webp',
-  dam3:'https://steez-models.oss-cn-hongkong.aliyuncs.com/paring_damascus.webp',
-  dr1:'https://steez-models.oss-cn-hongkong.aliyuncs.com/chiefs_dragon.webp',
-  dr2:'https://steez-models.oss-cn-hongkong.aliyuncs.com/nakiri_dragon.webp',
-  dr3:'https://steez-models.oss-cn-hongkong.aliyuncs.com/santoku_dragon.webp',
-  bd1:'https://steez-models.oss-cn-hongkong.aliyuncs.com/magnetic_cutting_board.webp',
-  bd2:'https://steez-models.oss-cn-hongkong.aliyuncs.com/wallnut_cutting_board.webp',
-  cw1:'https://steez-models.oss-cn-hongkong.aliyuncs.com/micro_pressure_wok.webp',
-  cw2:'https://steez-models.oss-cn-hongkong.aliyuncs.com/stainless_set_pots.webp',
-  cw3:'https://steez-models.oss-cn-hongkong.aliyuncs.com/utensils_set.webp',
-  sc1:'https://steez-models.oss-cn-hongkong.aliyuncs.com/multipurpose_scissors.webp',
-  sc2:'https://steez-models.oss-cn-hongkong.aliyuncs.com/poultry_scissors.webp',
-  sc3:'https://steez-models.oss-cn-hongkong.aliyuncs.com/herbs_scissors.webp',
-  sc4:'https://steez-models.oss-cn-hongkong.aliyuncs.com/seafood_scissors.webp',
-  sl1:'https://steez-models.oss-cn-hongkong.aliyuncs.com/chiefs_streamline.webp',
-  sl2:'https://steez-models.oss-cn-hongkong.aliyuncs.com/santoku_streamline.webp',
-  sl3:'https://steez-models.oss-cn-hongkong.aliyuncs.com/bread_streamline.webp',
-  sl4:'https://steez-models.oss-cn-hongkong.aliyuncs.com/paring_streamline.webp'
+  mts1:'collections_pics/colored_knives.jpg',
+  mts2:'collections_pics/colored_knives.jpg',
+  mts3:'collections_pics/colored_knives.jpg',
+  mts4:'collections_pics/colored_knives.jpg',
+  vf1:'collections_pics/v-form.jpg',
+  vf2:'collections_pics/v-form.jpg',
+  vf3:'collections_pics/v-form.jpg',
+  vf4:'collections_pics/v-form.jpg',
+  vf5:'collections_pics/v-form.jpg',
+  vf6:'collections_pics/v-form.jpg',
+  dam1:'collections_pics/damascus.jpg',
+  dam2:'collections_pics/damascus.jpg',
+  dam3:'collections_pics/damascus.jpg',
+  dr1:'collections_pics/dragon.jpg',
+  dr2:'collections_pics/dragon.jpg',
+  dr3:'collections_pics/dragon.jpg',
+  bd1:'collections_pics/cutting_board.jpg',
+  bd2:'collections_pics/cutting_board.jpg',
+  cw1:'collections_pics/pots.jpg',
+  cw2:'collections_pics/pots.jpg',
+  cw3:'collections_pics/pots.jpg',
+  sc1:'collections_pics/scissors.jpg',
+  sc2:'collections_pics/scissors.jpg',
+  sc3:'collections_pics/scissors.jpg',
+  sc4:'collections_pics/scissors.jpg',
+  sl1:'collections_pics/streamline.jpg',
+  sl2:'collections_pics/streamline.jpg',
+  sl3:'collections_pics/streamline.jpg',
+  sl4:'collections_pics/streamline.jpg'
 };
 
 /* helper: pick en or zh field */
