@@ -5,10 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <meta name="theme-color" content="#080808">
 <title>INWIN — Digital Catalogue · steez.digital</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- DNS prefetch for OSS -->
+<link rel="preconnect" href="https://steez-models.oss-cn-hongkong.aliyuncs.com">
+<link rel="dns-prefetch" href="https://steez-models.oss-cn-hongkong.aliyuncs.com">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+<!-- Google Fonts → fonts.loli.net (China mirror, unblocked) -->
+<link rel="preconnect" href="https://fonts.loli.net">
+<link href="https://fonts.loli.net/css2?family=Oswald:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<!-- Three.js: jsdelivr (China CDN nodes) instead of blocked cloudflare -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -1630,7 +1636,7 @@ body{padding-top:68px}
           </div>
         </div>
         <div class="cu-map">
-          <iframe src="https://maps.google.com/maps?q=Yangdong,Guangdong,China&t=&z=13&ie=UTF8&iwloc=&output=embed" title="INWIN — Yangdong" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <iframe src="https://map.baidu.com/?newmap=1&ie=utf-8&s=s%26wd%3D%E9%98%B3%E6%B1%9F%E5%8C%BA%2C%E9%98%B3%E6%B1%9F%2C%E5%B9%BF%E4%B8%9C%E7%9C%81%2C%E4%B8%AD%E5%9B%BD" title="INWIN — Yangdong" allowfullscreen loading="lazy"></iframe>
         </div>
       </div>
       <!-- Right: QR -->
