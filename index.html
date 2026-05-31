@@ -1028,41 +1028,44 @@ body{padding-top:68px}
 #mob-nav{
   display:none;
   position:fixed;bottom:0;left:0;right:0;z-index:1090;
-  background:rgba(8,8,8,0.96);
+  background:rgba(8,8,8,0.97);
   backdrop-filter:blur(20px) saturate(160%);
   -webkit-backdrop-filter:blur(20px) saturate(160%);
-  border-top:1px solid rgba(240,237,232,0.08);
-  padding:8px 0 calc(8px + env(safe-area-inset-bottom));
-  padding-bottom:calc(8px + env(safe-area-inset-bottom));
+  border-top:1px solid rgba(240,237,232,0.12);
+  padding-top:10px;
+  padding-bottom:10px;
+  /* iOS safe area — must be in a separate declaration for env() to work */
+  padding-bottom:max(10px, env(safe-area-inset-bottom, 10px));
 }
 .mob-nav-inner{
   display:flex;align-items:center;justify-content:space-around;
   max-width:500px;margin:0 auto;
+  padding:0 8px;
 }
 .mob-nav-item{
-  display:flex;flex-direction:column;align-items:center;gap:4px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
   text-decoration:none;cursor:pointer;
-  color:var(--white3);
-  transition:color 0.25s ease;
-  padding:4px 8px;
+  color:rgba(240,237,232,0.45);
+  transition:color 0.2s ease;
+  padding:4px 10px;
   -webkit-tap-highlight-color:transparent;
-  min-width:52px;
+  min-width:56px;
 }
 .mob-nav-item svg{
   width:22px;height:22px;stroke:currentColor;fill:none;
-  stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;
-  transition:stroke 0.25s ease;
+  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+  flex-shrink:0;
 }
 .mob-nav-item span{
-  font-family:var(--font-h);font-size:9px;font-weight:500;
-  letter-spacing:0.15em;text-transform:uppercase;
-  transition:color 0.25s ease;
+  font-family:var(--font-h);font-size:9px;font-weight:600;
+  letter-spacing:0.12em;text-transform:uppercase;line-height:1;
+  white-space:nowrap;
 }
 .mob-nav-item.active{color:var(--red)}
 .mob-nav-item.active svg{stroke:var(--red)}
 @media(max-width:760px){
   #mob-nav{display:block}
-  body{padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+  body{padding-bottom:calc(74px + env(safe-area-inset-bottom, 0px))}
 }
 
 /* ── DESKTOP SIDE NAV ── */
