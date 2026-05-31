@@ -2731,8 +2731,8 @@ function createKnifeScene(canvas, product, handleColorHex) {
   renderer.shadowMap.enabled = false;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(35, canvas.clientWidth / canvas.clientHeight || 1, 0.1, 100);
-  camera.position.set(0, 0, 7);
+  const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight || 1, 0.1, 100);
+  camera.position.set(0, 0, 10);
 
   // Lighting
   const ambient = new THREE.AmbientLight(0xffffff, 0.4);
@@ -2763,7 +2763,7 @@ function createKnifeScene(canvas, product, handleColorHex) {
   const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
   const maxDim = Math.max(size.x, size.y, size.z);
-  const scale = 4.5 / maxDim;
+  const scale = 2.8 / maxDim;
   group.scale.setScalar(scale);
   group.position.sub(center.multiplyScalar(scale));
   group.rotation.x = -0.15;
@@ -2975,8 +2975,8 @@ function renderPreview(product, canvasId, accentColor, glbPath) {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.3;
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(35, canvas.width / canvas.height, 0.1, 100);
-    camera.position.set(0, 0, 7);
+    const camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 0.1, 100);
+    camera.position.set(0, 0, 10);
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     const key = new THREE.DirectionalLight(0xffffff, 2.0); key.position.set(3, 4, 3); scene.add(key);
     const fill = new THREE.DirectionalLight(0x8090b0, 0.6); fill.position.set(-3, 1, 2); scene.add(fill);
@@ -3059,8 +3059,8 @@ function _startGLBModal(canvas, glbPath) {
   renderer.shadowMap.enabled = true;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(35, canvas.width / canvas.height, 0.1, 100);
-  camera.position.set(0, 0, 7);
+  const camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 0.1, 100);
+  camera.position.set(0, 0, 10);
 
   scene.add(new THREE.AmbientLight(0xffffff, 1.2));
   const key = new THREE.DirectionalLight(0xffffff, 4.0); key.position.set(3, 4, 3); scene.add(key);
@@ -3078,7 +3078,7 @@ function _startGLBModal(canvas, glbPath) {
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
-    const scale = 4.5 / maxDim;
+    const scale = 2.8 / maxDim;
     model.scale.setScalar(scale);
     model.position.sub(center.multiplyScalar(scale));
     scene.add(model);
