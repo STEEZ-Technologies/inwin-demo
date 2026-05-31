@@ -2759,20 +2759,20 @@ function createKnifeScene(canvas, product, handleColorHex) {
   topLight.position.set(0, 5, 1);
   scene.add(topLight);
 
-  // Build knife group
-  const group = buildKnifeModel(product, handleColorHex);
-  scene.add(group);
-
-  // Center/scale model based on blade type
-  const box = new THREE.Box3().setFromObject(group);
+  // Build knife group and center it properly
+  const inner = buildKnifeModel(product, handleColorHex);
+  const box = new THREE.Box3().setFromObject(inner);
+  const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
   const maxDim = Math.max(size.x, size.y, size.z);
+  inner.position.sub(center); // shift inner to origin before scaling
+
+  const group = new THREE.Group();
+  group.add(inner);
   const scale = 3.8 / maxDim;
   group.scale.setScalar(scale);
-  const box2 = new THREE.Box3().setFromObject(group);
-  const center = box2.getCenter(new THREE.Vector3());
-  group.position.sub(center);
   group.rotation.x = -0.15;
+  scene.add(group);
 
   return { renderer, scene, camera, group };
 }
@@ -3081,15 +3081,16 @@ function _startGLBModal(canvas, glbPath) {
 
   function _onLoaded(model) {
     const box = new THREE.Box3().setFromObject(model);
+    const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
+    model.position.sub(center); // center before scaling
+    const wrapper = new THREE.Group();
+    wrapper.add(model);
     const scale = 3.8 / maxDim;
-    model.scale.setScalar(scale);
-    const box2 = new THREE.Box3().setFromObject(model);
-    const center = box2.getCenter(new THREE.Vector3());
-    model.position.sub(center);
-    scene.add(model);
-    modalGroup = model;
+    wrapper.scale.setScalar(scale);
+    scene.add(wrapper);
+    modalGroup = wrapper;
     if (loadingEl) loadingEl.classList.remove('active');
     if (hintEl)    hintEl.style.opacity = '1';
     const animate = () => {
