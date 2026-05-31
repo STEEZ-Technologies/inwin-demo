@@ -1105,14 +1105,22 @@ body{padding-top:68px}
   stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;
 }
 .side-nav-item:hover{color:var(--white);background:rgba(240,237,232,0.07)}
-.side-nav-item.active{color:var(--white);background:rgba(160,30,20,0.45);box-shadow:0 0 0 1px rgba(192,57,43,0.3)}
-.side-nav-item.active svg{stroke:var(--red)}
+.side-nav-item.active{
+  color:var(--white);
+  background:rgba(30,30,38,0.95);
+  box-shadow:0 0 0 1.5px rgba(120,140,255,0.65);
+}
+.side-nav-item.active svg{stroke:var(--white)}
 .side-nav-divider{width:24px;height:1px;background:rgba(240,237,232,0.1);margin:6px 0}
 .side-nav-lang{
   font-family:var(--font-h);font-size:10px;font-weight:600;
   letter-spacing:0.08em;
 }
-.side-nav-item.lang-active{color:var(--white);background:rgba(192,57,43,0.18)}
+.side-nav-item.lang-active{
+  color:var(--white);
+  background:rgba(30,30,38,0.95);
+  box-shadow:0 0 0 1.5px rgba(120,140,255,0.65);
+}
 /* Tooltip */
 .side-nav-item[data-tip]::before{
   content:attr(data-tip);
@@ -2105,6 +2113,10 @@ function applyLang(lang){
 function toggleLang(){
   _lang = _lang === 'en' ? 'zh' : 'en';
   applyLang(_lang);
+  var enBtn = document.getElementById('sideNavEN');
+  var zhBtn = document.getElementById('sideNavZH');
+  if(enBtn) enBtn.classList.toggle('lang-active', _lang === 'en');
+  if(zhBtn) zhBtn.classList.toggle('lang-active', _lang === 'zh');
 }
 
 function handleContactForm(e) {
