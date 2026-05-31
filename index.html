@@ -1001,6 +1001,14 @@ section{padding:80px 0}
 }
 .hdr-nav a:hover{color:var(--white)}
 .hdr-nav a:hover::after{transform:scaleX(1);transform-origin:left}
+.hdr-nav a.active{
+  color:var(--white);
+  background:rgba(30,30,38,0.95);
+  border-radius:6px;
+  padding:4px 10px;
+  box-shadow:0 0 0 1.5px rgba(120,140,255,0.65);
+}
+.hdr-nav a.active::after{display:none}
 /* Right icons */
 .hdr-icons{display:flex;align-items:center;justify-content:flex-end;gap:20px;position:relative;z-index:2}
 .hdr-logo{position:relative;z-index:2}
@@ -1061,8 +1069,13 @@ body{padding-top:68px}
   letter-spacing:0.12em;text-transform:uppercase;line-height:1;
   white-space:nowrap;
 }
-.mob-nav-item.active{color:var(--red)}
-.mob-nav-item.active svg{stroke:var(--red)}
+.mob-nav-item.active{
+  color:var(--white);
+  background:rgba(30,30,38,0.95);
+  border-radius:12px;
+  box-shadow:0 0 0 1.5px rgba(120,140,255,0.65);
+}
+.mob-nav-item.active svg{stroke:var(--white)}
 @media(max-width:760px){
   #mob-nav{display:block}
   body{padding-bottom:calc(74px + env(safe-area-inset-bottom, 0px))}
@@ -3815,9 +3828,11 @@ window.addEventListener('resize', () => {
 
 // ── NAV SCROLL SPY ──
 (function(){
-  const sections = ['hero','heritage','our-craft','catalogue','knife-configurator','contact-us'];
+  const sections = ['hero','company','heritage','our-craft','catalogue','collections','knife-configurator','showcase','contact-us'];
   const mobItems = document.querySelectorAll('#mob-nav .mob-nav-item[data-section]');
   const sideItems = document.querySelectorAll('#side-nav .side-nav-item[data-section]');
+  // Map header nav links to sections by their href
+  const hdrLinks = Array.from(document.querySelectorAll('.hdr-nav a[href^="#"]'));
 
   function getActive(){
     let active = sections[0];
@@ -3835,6 +3850,10 @@ window.addEventListener('resize', () => {
     const active = getActive();
     mobItems.forEach(a => a.classList.toggle('active', a.dataset.section === active));
     sideItems.forEach(a => a.classList.toggle('active', a.dataset.section === active));
+    hdrLinks.forEach(a => {
+      const sec = a.getAttribute('href').slice(1);
+      a.classList.toggle('active', sec === active);
+    });
   }
 
   window.addEventListener('scroll', updateNav, {passive:true});
