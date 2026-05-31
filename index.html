@@ -2921,20 +2921,25 @@ function createKnifeScene(canvas, product, handleColorHex) {
   topLight.position.set(0, 5, 1);
   scene.add(topLight);
 
-  // Build knife group and center it properly
-  const inner = buildKnifeModel(product, handleColorHex);
-  const box = new THREE.Box3().setFromObject(inner);
+  // Build, scale, add — then aim camera at actual world-space center
+  const group = buildKnifeModel(product, handleColorHex);
+  const boxPre = new THREE.Box3().setFromObject(group);
+  const sizePre = boxPre.getSize(new THREE.Vector3());
+  const maxDim = Math.max(sizePre.x, sizePre.y, sizePre.z);
+  const scale = 3.2 / maxDim;
+  group.scale.setScalar(scale);
+  scene.add(group);
+  scene.updateMatrixWorld(true);
+
+  const box = new THREE.Box3().setFromObject(group);
   const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
-  const maxDim = Math.max(size.x, size.y, size.z);
-  inner.position.sub(center); // shift inner to origin before scaling
 
-  const group = new THREE.Group();
-  group.add(inner);
-  const scale = 3.8 / maxDim;
-  group.scale.setScalar(scale);
-  group.rotation.x = -0.15;
-  scene.add(group);
+  // Frame model: distance based on FOV and largest dimension
+  const fovRad = camera.fov * Math.PI / 180;
+  const dist = (Math.max(size.x / camera.aspect, size.y) / 2) / Math.tan(fovRad / 2) * 1.25;
+  camera.position.set(center.x, center.y, center.z + dist);
+  camera.lookAt(center);
 
   return { renderer, scene, camera, group };
 }
@@ -3166,13 +3171,19 @@ function renderPreview(product, canvasId, accentColor, glbPath) {
         .then(function(buf) {
           new THREE.GLTFLoader().parse(buf, '', function(gltf) {
             const model = gltf.scene;
-            const box = new THREE.Box3().setFromObject(model);
-            const center = box.getCenter(new THREE.Vector3());
-            const size = box.getSize(new THREE.Vector3());
-            const scale = 3.8 / Math.max(size.x, size.y, size.z);
+            const boxPre = new THREE.Box3().setFromObject(model);
+            const sizePre = boxPre.getSize(new THREE.Vector3());
+            const scale = 3.2 / Math.max(sizePre.x, sizePre.y, sizePre.z);
             model.scale.setScalar(scale);
-            model.position.sub(center.multiplyScalar(scale));
             scene.add(model);
+            scene.updateMatrixWorld(true);
+            const box2 = new THREE.Box3().setFromObject(model);
+            const center2 = box2.getCenter(new THREE.Vector3());
+            const size2 = box2.getSize(new THREE.Vector3());
+            const fovRad2 = camera.fov * Math.PI / 180;
+            const dist2 = (Math.max(size2.x / camera.aspect, size2.y) / 2) / Math.tan(fovRad2 / 2) * 1.25;
+            camera.position.set(center2.x, center2.y, center2.z + dist2);
+            camera.lookAt(center2);
             startAnim(model);
           }, fallback);
         })
@@ -3242,17 +3253,21 @@ function _startGLBModal(canvas, glbPath) {
   modalCamera = camera;
 
   function _onLoaded(model) {
+    const boxPre = new THREE.Box3().setFromObject(model);
+    const sizePre = boxPre.getSize(new THREE.Vector3());
+    const maxDim = Math.max(sizePre.x, sizePre.y, sizePre.z);
+    const scale = 3.2 / maxDim;
+    model.scale.setScalar(scale);
+    scene.add(model);
+    scene.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(model);
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z);
-    model.position.sub(center); // center before scaling
-    const wrapper = new THREE.Group();
-    wrapper.add(model);
-    const scale = 3.8 / maxDim;
-    wrapper.scale.setScalar(scale);
-    scene.add(wrapper);
-    modalGroup = wrapper;
+    const fovRad = camera.fov * Math.PI / 180;
+    const dist = (Math.max(size.x / camera.aspect, size.y) / 2) / Math.tan(fovRad / 2) * 1.25;
+    camera.position.set(center.x, center.y, center.z + dist);
+    camera.lookAt(center);
+    modalGroup = model;
     if (loadingEl) loadingEl.classList.remove('active');
     if (hintEl)    hintEl.style.opacity = '1';
     const animate = () => {
