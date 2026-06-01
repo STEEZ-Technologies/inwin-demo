@@ -3839,41 +3839,44 @@ window.addEventListener('resize', () => {
 
 // ── NAV SCROLL SPY ──
 (function(){
-  var items = Array.from(document.querySelectorAll('[data-section]'));
   var navIds = ['hero','heritage','our-craft','catalogue','knife-configurator','contact-us'];
 
+  var ACTIVE_STYLE = 'border:2px solid #c0392b !important;background:rgba(192,57,43,0.2) !important;box-shadow:0 0 10px rgba(192,57,43,0.5) !important;border-radius:10px;';
+  var IDLE_STYLE   = 'border:2px solid transparent;background:transparent;box-shadow:none;';
+
   function activate(id){
-    items.forEach(function(a){
-      if(a.dataset.section === id){
-        a.classList.add('active');
-      } else {
-        a.classList.remove('active');
-      }
+    navIds.forEach(function(sid){
+      var items = document.querySelectorAll('[data-section="'+sid+'"]');
+      items.forEach(function(el){
+        var isActive = sid === id;
+        el.setAttribute('style', isActive ? ACTIVE_STYLE : IDLE_STYLE);
+        var svg = el.querySelector('svg');
+        if(svg) svg.style.stroke = isActive ? '#c0392b' : '';
+      });
     });
   }
 
-  function update(){
+  function getActive(){
     var best = navIds[0];
     var center = window.innerHeight / 2;
     for(var i = 0; i < navIds.length; i++){
       var el = document.getElementById(navIds[i]);
       if(!el) continue;
-      var rect = el.getBoundingClientRect();
-      if(rect.top <= center) best = navIds[i];
+      if(el.getBoundingClientRect().top <= center) best = navIds[i];
     }
-    activate(best);
+    return best;
   }
 
-  window.addEventListener('scroll', update, {passive:true});
-  update();
+  window.addEventListener('scroll', function(){ activate(getActive()); }, {passive:true});
+  activate(getActive());
 
-  document.querySelectorAll('#side-nav a, #mob-nav a').forEach(function(a){
+  document.querySelectorAll('#side-nav a[href^="#"], #mob-nav a[href^="#"]').forEach(function(a){
     a.addEventListener('click', function(e){
       e.preventDefault();
-      var id = (a.getAttribute('href')||'').replace('#','');
-      var el = document.getElementById(id);
-      if(el) el.scrollIntoView({behavior:'smooth'});
-      if(navIds.indexOf(id)>-1) activate(id);
+      var id = a.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
+      if(target) target.scrollIntoView({behavior:'smooth'});
+      if(navIds.indexOf(id) > -1) activate(id);
     });
   });
 })();
