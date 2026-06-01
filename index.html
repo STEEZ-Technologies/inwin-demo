@@ -3840,6 +3840,10 @@ window.addEventListener('resize', () => {
   var hdrLinks  = Array.from(document.querySelectorAll('.hdr-nav a[href^="#"]'));
   var navIds    = sideItems.map(function(a){ return a.dataset.section; });
 
+  function getScrollY(){
+    return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+  }
+
   function setActive(id){
     sideItems.forEach(function(a){ a.classList.toggle('active', a.dataset.section === id); });
     mobItems.forEach(function(a){  a.classList.toggle('active', a.dataset.section === id); });
@@ -3847,12 +3851,13 @@ window.addEventListener('resize', () => {
   }
 
   function getActive(){
-    var mid = window.innerHeight * 0.5 + window.scrollY;
+    var scrollY = getScrollY();
+    var mid = window.innerHeight * 0.5 + scrollY;
     var best = navIds[0];
     for(var i = 0; i < navIds.length; i++){
       var el = document.getElementById(navIds[i]);
-      if(!el || el.offsetParent === null) continue;
-      var top = el.getBoundingClientRect().top + window.scrollY;
+      if(!el) continue;
+      var top = el.getBoundingClientRect().top + scrollY;
       if(top <= mid) best = navIds[i];
     }
     return best;
@@ -3869,7 +3874,12 @@ window.addEventListener('resize', () => {
     }
   }
 
-  window.addEventListener('scroll', onScroll, {passive: true});
+  // listen on all possible scroll targets
+  window.addEventListener('scroll', onScroll, {passive:true});
+  document.addEventListener('scroll', onScroll, {passive:true});
+  document.documentElement.addEventListener('scroll', onScroll, {passive:true});
+  document.body.addEventListener('scroll', onScroll, {passive:true});
+
   setActive(getActive());
 
   // click → immediate active + smooth scroll
