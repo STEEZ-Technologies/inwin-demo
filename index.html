@@ -3835,55 +3835,53 @@ window.addEventListener('resize', () => {
 
 // ── NAV SCROLL SPY ──
 (function(){
-  const sideItems = Array.from(document.querySelectorAll('#side-nav .side-nav-item[data-section]'));
-  const mobItems  = Array.from(document.querySelectorAll('#mob-nav .mob-nav-item[data-section]'));
-  const hdrLinks  = Array.from(document.querySelectorAll('.hdr-nav a[href^="#"]'));
-  const navIds    = sideItems.map(a => a.dataset.section);
+  var sideItems = Array.from(document.querySelectorAll('#side-nav .side-nav-item[data-section]'));
+  var mobItems  = Array.from(document.querySelectorAll('#mob-nav .mob-nav-item[data-section]'));
+  var hdrLinks  = Array.from(document.querySelectorAll('.hdr-nav a[href^="#"]'));
+  var navIds    = sideItems.map(function(a){ return a.dataset.section; });
 
   function setActive(id){
-    sideItems.forEach(a => a.classList.toggle('active', a.dataset.section === id));
-    mobItems.forEach(a  => a.classList.toggle('active', a.dataset.section === id));
-    hdrLinks.forEach(a  => a.classList.toggle('active', a.getAttribute('href').slice(1) === id));
+    sideItems.forEach(function(a){ a.classList.toggle('active', a.dataset.section === id); });
+    mobItems.forEach(function(a){  a.classList.toggle('active', a.dataset.section === id); });
+    hdrLinks.forEach(function(a){  a.classList.toggle('active', a.getAttribute('href').slice(1) === id); });
   }
 
-  // rootMargin creates a trigger band at viewport center (only middle 10% fires)
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if(e.isIntersecting) setActive(e.target.id);
-    });
-  }, {
-    rootMargin: '-45% 0px -45% 0px',
-    threshold: 0
-  });
+  function getActive(){
+    var mid = window.innerHeight * 0.5 + window.scrollY;
+    var best = navIds[0];
+    for(var i = 0; i < navIds.length; i++){
+      var el = document.getElementById(navIds[i]);
+      if(!el || el.offsetParent === null) continue;
+      var top = el.getBoundingClientRect().top + window.scrollY;
+      if(top <= mid) best = navIds[i];
+    }
+    return best;
+  }
 
-  navIds.forEach(id => {
-    const el = document.getElementById(id);
-    if(el) observer.observe(el);
-  });
+  var ticking = false;
+  function onScroll(){
+    if(!ticking){
+      requestAnimationFrame(function(){
+        setActive(getActive());
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }
 
-  setActive(navIds[0]);
+  window.addEventListener('scroll', onScroll, {passive: true});
+  setActive(getActive());
 
   // click → immediate active + smooth scroll
-  document.querySelectorAll('#side-nav a[href^="#"], #mob-nav a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
+  document.querySelectorAll('#side-nav a[href^="#"], #mob-nav a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
       e.preventDefault();
-      const id = a.getAttribute('href').slice(1);
-      const target = document.getElementById(id);
+      var id = a.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
       if(target) target.scrollIntoView({behavior:'smooth'});
-      if(navIds.includes(id)) setActive(id);
+      if(navIds.indexOf(id) !== -1) setActive(id);
     });
   });
-
-  // sync lang buttons
-  const origToggle = window.toggleLang;
-  if(origToggle){
-    window.toggleLang = function(){
-      origToggle();
-      const isZH = (document.getElementById('hdrLangTxt')||{}).textContent.trim() === 'ZH';
-      document.getElementById('sideNavEN').classList.toggle('lang-active', !isZH);
-      document.getElementById('sideNavZH').classList.toggle('lang-active', isZH);
-    };
-  }
 })();
 </script>
 </body>
