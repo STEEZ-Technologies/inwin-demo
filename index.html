@@ -3856,30 +3856,19 @@ window.addEventListener('resize', () => {
   const sideItems = document.querySelectorAll('#side-nav .side-nav-item[data-section]');
   const hdrLinks = Array.from(document.querySelectorAll('.hdr-nav a[href^="#"]'));
 
-  // All page sections in DOM order
-  const allSections = Array.from(document.querySelectorAll('section[id], div[id].carousel-section'))
-    .map(el => el.id).filter(Boolean);
-
-  // Sections that have a nav icon (side-nav)
-  const navSectionIds = Array.from(sideItems).map(a => a.dataset.section);
+  // nav icon section IDs in order
+  const navIds = Array.from(sideItems).map(a => a.dataset.section);
 
   function getActive(){
-    const threshold = window.innerHeight * 0.5;
-    let lastPassed = null;
-    for(const id of allSections){
+    const threshold = window.innerHeight * 0.55;
+    let best = navIds[0];
+    for(const id of navIds){
       const el = document.getElementById(id);
-      if(!el) continue;
-      if(el.getBoundingClientRect().top <= threshold) lastPassed = id;
+      // skip hidden elements (display:none → offsetParent===null)
+      if(!el || el.offsetParent === null) continue;
+      if(el.getBoundingClientRect().top <= threshold) best = id;
     }
-    if(!lastPassed) return navSectionIds[0];
-    // If section has a nav icon, use it directly
-    if(navSectionIds.includes(lastPassed)) return lastPassed;
-    // Otherwise find closest previous section that has an icon
-    const idx = allSections.indexOf(lastPassed);
-    for(let i = idx; i >= 0; i--){
-      if(navSectionIds.includes(allSections[i])) return allSections[i];
-    }
-    return navSectionIds[0];
+    return best;
   }
 
   function updateNav(){
