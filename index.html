@@ -3852,25 +3852,36 @@ window.addEventListener('resize', () => {
 
 // ── NAV SCROLL SPY ──
 (function(){
-  const sections = ['hero','company','heritage','our-craft','catalogue','collections','knife-configurator','showcase','contact-us'];
   const mobItems = document.querySelectorAll('#mob-nav .mob-nav-item[data-section]');
   const sideItems = document.querySelectorAll('#side-nav .side-nav-item[data-section]');
-  // Map header nav links to sections by their href
   const hdrLinks = Array.from(document.querySelectorAll('.hdr-nav a[href^="#"]'));
 
+  // All page sections in DOM order
+  const allSections = Array.from(document.querySelectorAll('section[id], div[id].carousel-section'))
+    .map(el => el.id).filter(Boolean);
+
+  // Sections that have a nav icon (side-nav)
+  const navSectionIds = Array.from(sideItems).map(a => a.dataset.section);
+
   function getActive(){
-    let active = sections[0];
     const threshold = window.innerHeight * 0.5;
-    for(const id of sections){
+    let lastPassed = null;
+    for(const id of allSections){
       const el = document.getElementById(id);
       if(!el) continue;
-      const top = el.getBoundingClientRect().top;
-      if(top <= threshold) active = id;
+      if(el.getBoundingClientRect().top <= threshold) lastPassed = id;
     }
-    return active;
+    if(!lastPassed) return navSectionIds[0];
+    // If section has a nav icon, use it directly
+    if(navSectionIds.includes(lastPassed)) return lastPassed;
+    // Otherwise find closest previous section that has an icon
+    const idx = allSections.indexOf(lastPassed);
+    for(let i = idx; i >= 0; i--){
+      if(navSectionIds.includes(allSections[i])) return allSections[i];
+    }
+    return navSectionIds[0];
   }
 
-  let lastActive = null;
   function updateNav(){
     const active = getActive();
     mobItems.forEach(a => a.classList.toggle('active', a.dataset.section === active));
@@ -3889,7 +3900,6 @@ window.addEventListener('resize', () => {
       const sec = a.getAttribute('href').slice(1);
       a.classList.toggle('active', sec === active);
     });
-    lastActive = active;
   }
 
   window.addEventListener('scroll', updateNav, {passive:true});
