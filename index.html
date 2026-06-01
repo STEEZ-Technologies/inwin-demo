@@ -1106,46 +1106,29 @@ body{padding-top:68px}
 .side-nav-item{
   display:flex;align-items:center;justify-content:center;
   width:36px;height:36px;border-radius:10px;
-  text-decoration:none;cursor:pointer;background:none;border:none;
-  color:rgba(240,237,232,0.45);
-  transition:color 0.3s ease,background 0.3s ease,transform 0.3s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.3s ease;
+  text-decoration:none;cursor:pointer;
+  background:none;
+  border:2px solid transparent;
+  color:rgba(240,237,232,0.4);
+  transition:all 0.3s ease;
   position:relative;
   -webkit-tap-highlight-color:transparent;
 }
 .side-nav-item svg{
   width:18px;height:18px;stroke:currentColor;fill:none;
   stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;
-  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),stroke 0.3s ease;
 }
 .side-nav-item:hover{
   color:var(--white);
   background:rgba(240,237,232,0.07);
-  transform:scale(1.12);
-}
-.side-nav-item:hover svg{transform:scale(1.1)}
-@keyframes sideNavPop{
-  0%{transform:scale(1)}
-  45%{transform:scale(1.22)}
-  100%{transform:scale(1)}
-}
-@keyframes sideNavGlow{
-  0%,100%{box-shadow:0 0 0 1.5px rgba(192,57,43,0.65),0 0 0 0 rgba(192,57,43,0)}
-  50%{box-shadow:0 0 0 1.5px rgba(192,57,43,0.9),0 0 12px 3px rgba(192,57,43,0.25)}
 }
 .side-nav-item.active{
-  color:var(--white);
-  background:rgba(192,57,43,0.15);
-  box-shadow:0 0 0 1.5px rgba(192,57,43,0.65),0 0 10px 2px rgba(192,57,43,0.15);
-  transform:scale(1.08);
-  animation:sideNavGlow 2.5s ease-in-out infinite;
+  color:var(--red);
+  background:rgba(192,57,43,0.12);
+  border-color:var(--red);
+  box-shadow:0 0 10px rgba(192,57,43,0.3);
 }
-.side-nav-item.active svg{
-  stroke:var(--white);
-  transform:scale(1.1);
-}
-.side-nav-item.active.just-activated{
-  animation:sideNavPop 0.4s cubic-bezier(0.34,1.56,0.64,1),sideNavGlow 2.5s 0.4s ease-in-out infinite;
-}
+.side-nav-item.active svg{stroke:var(--red)}
 .side-nav-divider{width:24px;height:1px;background:rgba(240,237,232,0.1);margin:6px 0}
 .side-nav-lang{
   font-family:var(--font-h);font-size:10px;font-weight:600;
@@ -3850,77 +3833,43 @@ window.addEventListener('resize', () => {
 
 })();
 
-// ── NAV SCROLL SPY (IntersectionObserver) ──
+// ── NAV SCROLL SPY ──
 (function(){
   const sideItems = Array.from(document.querySelectorAll('#side-nav .side-nav-item[data-section]'));
-  const mobItems  = Array.from(document.querySelectorAll('#mob-nav  .mob-nav-item[data-section]'));
+  const mobItems  = Array.from(document.querySelectorAll('#mob-nav .mob-nav-item[data-section]'));
   const hdrLinks  = Array.from(document.querySelectorAll('.hdr-nav a[href^="#"]'));
-
-  // ordered list of section IDs that have a nav icon
-  const navIds = sideItems.map(a => a.dataset.section);
-
-  // track which nav-sections are currently intersecting
-  const visible = new Set();
+  const navIds    = sideItems.map(a => a.dataset.section);
 
   function setActive(id){
-    [sideItems, mobItems].forEach(list => {
-      list.forEach(a => {
-        const isActive = a.dataset.section === id;
-        const wasActive = a.classList.contains('active');
-        a.classList.toggle('active', isActive);
-        if(isActive && !wasActive){
-          a.classList.remove('just-activated');
-          void a.offsetWidth;
-          a.classList.add('just-activated');
-          setTimeout(() => a.classList.remove('just-activated'), 450);
-        }
-      });
-    });
-    hdrLinks.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href').slice(1) === id);
-    });
+    sideItems.forEach(a => a.classList.toggle('active', a.dataset.section === id));
+    mobItems.forEach(a  => a.classList.toggle('active', a.dataset.section === id));
+    hdrLinks.forEach(a  => a.classList.toggle('active', a.getAttribute('href').slice(1) === id));
   }
 
-  function pickActive(){
-    // pick the first navId (in DOM order) that is currently visible
-    for(const id of navIds){
-      if(visible.has(id)) return id;
-    }
-    // fallback: topmost section above viewport midpoint
-    const mid = window.innerHeight * 0.5;
-    let best = navIds[0];
-    for(const id of navIds){
-      const el = document.getElementById(id);
-      if(!el || el.offsetParent === null) continue;
-      if(el.getBoundingClientRect().top <= mid) best = id;
-    }
-    return best;
-  }
-
-  // observe each nav section
+  // rootMargin creates a trigger band at viewport center (only middle 10% fires)
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if(e.isIntersecting) visible.add(e.target.id);
-      else visible.delete(e.target.id);
+      if(e.isIntersecting) setActive(e.target.id);
     });
-    setActive(pickActive());
-  }, { threshold: 0.15 });
+  }, {
+    rootMargin: '-45% 0px -45% 0px',
+    threshold: 0
+  });
 
   navIds.forEach(id => {
     const el = document.getElementById(id);
     if(el) observer.observe(el);
   });
 
-  // initial state
   setActive(navIds[0]);
 
-  // click → smooth scroll + immediate active
+  // click → immediate active + smooth scroll
   document.querySelectorAll('#side-nav a[href^="#"], #mob-nav a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
       const id = a.getAttribute('href').slice(1);
       const target = document.getElementById(id);
-      if(target){ target.scrollIntoView({behavior:'smooth'}); }
+      if(target) target.scrollIntoView({behavior:'smooth'});
       if(navIds.includes(id)) setActive(id);
     });
   });
