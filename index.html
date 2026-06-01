@@ -1067,6 +1067,36 @@ body{padding-top:68px}
 }
 .cm-btn svg{flex-shrink:0;transition:color 0.25s ease}
 .cm-btn:hover{border-color:var(--red);color:var(--red)}
+
+#scroll-nav{
+  position:fixed;right:20px;top:50%;transform:translateY(-50%);
+  z-index:1200;display:flex;flex-direction:column;gap:10px;align-items:center;
+}
+@media(max-width:760px){#scroll-nav{display:none}}
+.sn-dot{
+  position:relative;width:8px;height:8px;border-radius:50%;
+  background:rgba(240,237,232,0.2);border:none;cursor:pointer;padding:0;
+  transition:background 0.3s ease,transform 0.3s ease;
+  display:flex;align-items:center;justify-content:center;
+}
+.sn-dot::before{
+  content:'';position:absolute;inset:-5px;border-radius:50%;
+  border:1.5px solid transparent;
+  transition:border-color 0.3s ease;
+}
+.sn-dot.active{background:var(--red);transform:scale(1.35)}
+.sn-dot.active::before{border-color:rgba(192,57,43,0.4)}
+.sn-dot:hover{background:var(--white);transform:scale(1.2)}
+.sn-tooltip{
+  position:absolute;right:22px;top:50%;transform:translateY(-50%);
+  background:rgba(8,8,8,0.88);border:1px solid rgba(240,237,232,0.1);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  padding:5px 10px;border-radius:4px;white-space:nowrap;
+  font-family:var(--font-h);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--white);pointer-events:none;
+  opacity:0;transition:opacity 0.2s ease;
+}
+.sn-dot:hover .sn-tooltip{opacity:1}
 </style>
 </head>
 <body>
@@ -1104,6 +1134,9 @@ body{padding-top:68px}
     </div>
   </div>
 </header>
+
+<!-- ─── SCROLL NAV ─── -->
+<nav id="scroll-nav" aria-label="Page sections"></nav>
 
 <!-- ─── LOADER ─── -->
 <div id="loader">
@@ -3611,6 +3644,52 @@ window.addEventListener('resize', () => {
     if(window.scrollY > 60) siteHdr.classList.add('scrolled');
     else siteHdr.classList.remove('scrolled');
   }, {passive:true});
+
+  /* ─── SCROLL NAV ─── */
+  (function(){
+    var sections = [
+      {id:'hero',        label:'Home'},
+      {id:'company',     label:'About Us'},
+      {id:'heritage',    label:'Our Story'},
+      {id:'our-craft',   label:'Our Craft'},
+      {id:'catalogue',   label:'Collections'},
+      {id:'knife-configurator', label:'Configurator'},
+      {id:'showcase',    label:'Catalog'},
+      {id:'contact-us',  label:'Contact'}
+    ];
+    var nav = document.getElementById('scroll-nav');
+    var dots = [];
+    sections.forEach(function(s, i){
+      var el = document.getElementById(s.id);
+      if(!el) return;
+      var btn = document.createElement('button');
+      btn.className = 'sn-dot';
+      btn.setAttribute('aria-label', s.label);
+      btn.innerHTML = '<span class="sn-tooltip">'+s.label+'</span>';
+      btn.addEventListener('click', function(){
+        el.scrollIntoView({behavior:'smooth'});
+      });
+      nav.appendChild(btn);
+      dots.push({btn:btn, el:el});
+    });
+
+    var ticking = false;
+    function updateActive(){
+      var mid = window.scrollY + window.innerHeight * 0.4;
+      var best = 0;
+      for(var i = 0; i < dots.length; i++){
+        if(dots[i].el.getBoundingClientRect().top + window.scrollY <= mid + 1) best = i;
+      }
+      dots.forEach(function(d, i){
+        d.btn.classList.toggle('active', i === best);
+      });
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){ requestAnimationFrame(updateActive); ticking=true; }
+    }, {passive:true});
+    updateActive();
+  })();
 })();
 </script>
 </body>
