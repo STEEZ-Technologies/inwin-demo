@@ -56,6 +56,7 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);overfl
 /* ─── HERO ─── */
 #hero{
   min-height:100vh;
+  min-height:100svh;
   background:var(--black);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   position:relative;overflow:hidden;
@@ -67,6 +68,10 @@ body{font-family:var(--font-b);background:var(--black);color:var(--white);overfl
   background-size:cover;background-position:center center;background-repeat:no-repeat;
   opacity:0;
   animation:heroSlide 24s ease-in-out infinite;
+}
+@media(max-width:768px){
+  .hero-slide{background-position:50% 50%;background-attachment:scroll;}
+  .hero-slide:nth-child(4){background-position:58% 45%;}
 }
 .hero-slide:nth-child(1){animation-delay:0s}
 .hero-slide:nth-child(2){animation-delay:6s}
@@ -996,6 +1001,14 @@ section{padding:80px 0}
 }
 .hdr-nav a:hover{color:var(--white)}
 .hdr-nav a:hover::after{transform:scaleX(1);transform-origin:left}
+.hdr-nav a.active{
+  color:var(--white);
+  background:rgba(30,30,38,0.95);
+  border-radius:6px;
+  padding:4px 10px;
+  box-shadow:0 0 0 1.5px rgba(120,140,255,0.65);
+}
+.hdr-nav a.active::after{display:none}
 /* Right icons */
 .hdr-icons{display:flex;align-items:center;justify-content:flex-end;gap:20px;position:relative;z-index:2}
 .hdr-logo{position:relative;z-index:2}
@@ -1018,6 +1031,123 @@ section{padding:80px 0}
   body{padding-top:56px}
 }
 body{padding-top:68px}
+
+/* ── MOBILE BOTTOM NAV ── */
+#mob-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:1090;
+  background:rgba(8,8,8,0.97);
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  border-top:1px solid rgba(240,237,232,0.12);
+  padding-top:10px;
+  padding-bottom:10px;
+  /* iOS safe area — must be in a separate declaration for env() to work */
+  padding-bottom:max(10px, env(safe-area-inset-bottom, 10px));
+}
+.mob-nav-inner{
+  display:flex;align-items:center;justify-content:space-around;
+  max-width:500px;margin:0 auto;
+  padding:0 8px;
+}
+.mob-nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  text-decoration:none;cursor:pointer;
+  color:rgba(240,237,232,0.45);
+  transition:color 0.2s ease;
+  padding:4px 10px;
+  -webkit-tap-highlight-color:transparent;
+  min-width:56px;
+}
+.mob-nav-item svg{
+  width:22px;height:22px;stroke:currentColor;fill:none;
+  stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;
+  flex-shrink:0;
+}
+.mob-nav-item span{
+  font-family:var(--font-h);font-size:9px;font-weight:600;
+  letter-spacing:0.12em;text-transform:uppercase;line-height:1;
+  white-space:nowrap;
+}
+.mob-nav-item.active{
+  color:var(--white);
+  background:rgba(30,30,38,0.95);
+  border-radius:12px;
+  box-shadow:0 0 0 1.5px rgba(120,140,255,0.65);
+}
+.mob-nav-item.active svg{stroke:var(--white)}
+@media(max-width:760px){
+  #mob-nav{display:block}
+  body{padding-bottom:calc(74px + env(safe-area-inset-bottom, 0px))}
+}
+
+/* ── DESKTOP SIDE NAV ── */
+#side-nav{
+  display:none;
+  position:fixed;right:20px;top:50%;transform:translateY(-50%);
+  z-index:1090;
+  background:rgba(14,14,14,0.92);
+  backdrop-filter:blur(20px) saturate(150%);
+  -webkit-backdrop-filter:blur(20px) saturate(150%);
+  border:1px solid rgba(240,237,232,0.07);
+  border-radius:28px;
+  padding:14px 10px;
+  display:none;
+  flex-direction:column;align-items:center;gap:4px;
+  width:52px;
+}
+.side-nav-logo{
+  width:34px;height:34px;border-radius:10px;
+  background:var(--red);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:8px;
+  overflow:hidden;
+}
+.side-nav-logo img{width:26px;height:26px;object-fit:contain;filter:brightness(10)}
+.side-nav-item{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:10px;
+  text-decoration:none;cursor:pointer;background:none;border:none;
+  color:rgba(240,237,232,0.45);
+  transition:color 0.25s ease,background 0.25s ease;
+  position:relative;
+  -webkit-tap-highlight-color:transparent;
+}
+.side-nav-item svg{
+  width:18px;height:18px;stroke:currentColor;fill:none;
+  stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;
+}
+.side-nav-item:hover{color:var(--white);background:rgba(240,237,232,0.07)}
+.side-nav-item.active{
+  color:var(--white);
+  background:rgba(30,30,38,0.95);
+  box-shadow:0 0 0 1.5px rgba(120,140,255,0.65);
+}
+.side-nav-item.active svg{stroke:var(--white)}
+.side-nav-divider{width:24px;height:1px;background:rgba(240,237,232,0.1);margin:6px 0}
+.side-nav-lang{
+  font-family:var(--font-h);font-size:10px;font-weight:600;
+  letter-spacing:0.08em;
+}
+.side-nav-item.lang-active{
+  color:var(--white);
+  background:rgba(30,30,38,0.95);
+  box-shadow:0 0 0 1.5px rgba(120,140,255,0.65);
+}
+/* Tooltip */
+.side-nav-item[data-tip]::before{
+  content:attr(data-tip);
+  position:absolute;right:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  background:rgba(8,8,8,0.9);color:var(--white2);
+  font-family:var(--font-h);font-size:9px;letter-spacing:0.12em;text-transform:uppercase;
+  padding:4px 8px;border-radius:4px;white-space:nowrap;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.2s ease;
+}
+.side-nav-item[data-tip]:hover::before{opacity:1}
+@media(min-width:761px){
+  #side-nav{display:flex}
+}
 
 /* ─── COMMUNITY ─── */
 #community{background:var(--black);border-top:1px solid rgba(240,237,232,0.08);padding:100px 0}
@@ -1068,35 +1198,6 @@ body{padding-top:68px}
 .cm-btn svg{flex-shrink:0;transition:color 0.25s ease}
 .cm-btn:hover{border-color:var(--red);color:var(--red)}
 
-#scroll-nav{
-  position:fixed;right:20px;top:50%;transform:translateY(-50%);
-  z-index:1200;display:flex;flex-direction:column;gap:10px;align-items:center;
-}
-@media(max-width:760px){#scroll-nav{display:none}}
-.sn-dot{
-  position:relative;width:8px;height:8px;border-radius:50%;
-  background:rgba(240,237,232,0.2);border:none;cursor:pointer;padding:0;
-  transition:background 0.3s ease,transform 0.3s ease;
-  display:flex;align-items:center;justify-content:center;
-}
-.sn-dot::before{
-  content:'';position:absolute;inset:-5px;border-radius:50%;
-  border:1.5px solid transparent;
-  transition:border-color 0.3s ease;
-}
-.sn-dot.active{background:var(--red);transform:scale(1.35)}
-.sn-dot.active::before{border-color:rgba(192,57,43,0.4)}
-.sn-dot:hover{background:var(--white);transform:scale(1.2)}
-.sn-tooltip{
-  position:absolute;right:22px;top:50%;transform:translateY(-50%);
-  background:rgba(8,8,8,0.88);border:1px solid rgba(240,237,232,0.1);
-  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
-  padding:5px 10px;border-radius:4px;white-space:nowrap;
-  font-family:var(--font-h);font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--white);pointer-events:none;
-  opacity:0;transition:opacity 0.2s ease;
-}
-.sn-dot:hover .sn-tooltip{opacity:1}
 </style>
 </head>
 <body>
@@ -1135,8 +1236,64 @@ body{padding-top:68px}
   </div>
 </header>
 
-<!-- ─── SCROLL NAV ─── -->
-<nav id="scroll-nav" aria-label="Page sections"></nav>
+<!-- ─── MOBILE BOTTOM NAV ─── -->
+<nav id="mob-nav" aria-label="Mobile navigation">
+  <div class="mob-nav-inner">
+    <a class="mob-nav-item active" href="#hero" data-section="hero">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span data-i18n="mob-home">Home</span>
+    </a>
+    <a class="mob-nav-item" href="#heritage" data-section="heritage">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+      <span data-i18n="mob-tech">Technology</span>
+    </a>
+    <a class="mob-nav-item" href="#catalogue" data-section="catalogue">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="7" height="7"/><rect x="15" y="3" width="7" height="7"/><rect x="15" y="14" width="7" height="7"/><rect x="2" y="14" width="7" height="7"/></svg>
+      <span data-i18n="mob-products">Products</span>
+    </a>
+    <a class="mob-nav-item" href="#knife-configurator" data-section="knife-configurator">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span data-i18n="mob-compare">Compare</span>
+    </a>
+    <a class="mob-nav-item" href="#contact-us" data-section="contact-us">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      <span data-i18n="mob-contact">Contact</span>
+    </a>
+  </div>
+</nav>
+
+<!-- ─── DESKTOP SIDE NAV ─── -->
+<nav id="side-nav" aria-label="Side navigation">
+  <div class="side-nav-logo">
+    <img src="collections_pics/logo.png" alt="inWin">
+  </div>
+  <a class="side-nav-item active" href="#hero" data-section="hero" data-tip="Home">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+  </a>
+  <a class="side-nav-item" href="#heritage" data-section="heritage" data-tip="Technology">
+    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+  </a>
+  <a class="side-nav-item" href="#our-craft" data-section="our-craft" data-tip="Our Craft">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  </a>
+  <a class="side-nav-item" href="#catalogue" data-section="catalogue" data-tip="Products">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+  </a>
+  <a class="side-nav-item" href="#knife-configurator" data-section="knife-configurator" data-tip="Compare">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+  </a>
+  <div class="side-nav-divider"></div>
+  <button class="side-nav-item side-nav-lang lang-active" id="sideNavEN" onclick="if(_lang!=='en'){toggleLang()}" data-tip="English">
+    <span class="side-nav-lang">EN</span>
+  </button>
+  <button class="side-nav-item side-nav-lang" id="sideNavZH" onclick="if(_lang!=='zh'){toggleLang()}" data-tip="中文">
+    <span class="side-nav-lang">中</span>
+  </button>
+  <div class="side-nav-divider"></div>
+  <a class="side-nav-item" href="#contact-us" data-section="contact-us" data-tip="Contact">
+    <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  </a>
+</nav>
 
 <!-- ─── LOADER ─── -->
 <div id="loader">
@@ -1719,6 +1876,7 @@ var _lang = 'en';
 var _T = {
   en:{
     nav1:'Collections', nav2:'Configurator', nav3:'Knife Finder', nav4:'About Us', 'nav-catalog':'Catalog', 'nav-contact':'Contact Us',
+    'mob-home':'Home','mob-products':'Products','mob-tech':'Technology','mob-compare':'Compare','mob-contact':'Contact',
     'hero-title':'Master Craftsman<br>of Professional<br>Kitchenware',
     'hero-sub':'Knives &nbsp;·&nbsp; Utensils &nbsp;·&nbsp; Cookware &nbsp;·&nbsp; Since 1979',
     'co-label':'Company Profile',
@@ -1790,6 +1948,7 @@ var _T = {
   },
   zh:{
     nav1:'系列产品', nav2:'配置器', nav3:'刀具查询', nav4:'关于我们', 'nav-catalog':'产品目录', 'nav-contact':'联系我们',
+    'mob-home':'主页','mob-products':'产品','mob-tech':'技术','mob-compare':'对比','mob-contact':'联系',
     'hero-title':'专业厨具<br>精工匠人',
     'hero-sub':'刀具 · 餐具 · 炊具 · 始于1979年',
     'co-label':'公司简介',
@@ -1968,6 +2127,10 @@ function applyLang(lang){
 function toggleLang(){
   _lang = _lang === 'en' ? 'zh' : 'en';
   applyLang(_lang);
+  var enBtn = document.getElementById('sideNavEN');
+  var zhBtn = document.getElementById('sideNavZH');
+  if(enBtn) enBtn.classList.toggle('lang-active', _lang === 'en');
+  if(zhBtn) zhBtn.classList.toggle('lang-active', _lang === 'zh');
 }
 
 function handleContactForm(e) {
@@ -2764,8 +2927,8 @@ function createKnifeScene(canvas, product, handleColorHex) {
   renderer.shadowMap.enabled = false;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(35, canvas.clientWidth / canvas.clientHeight || 1, 0.1, 100);
-  camera.position.set(0, 0, 7);
+  const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight || 1, 0.1, 100);
+  camera.position.set(0, 0, 10);
 
   // Lighting
   const ambient = new THREE.AmbientLight(0xffffff, 0.4);
@@ -2787,19 +2950,25 @@ function createKnifeScene(canvas, product, handleColorHex) {
   topLight.position.set(0, 5, 1);
   scene.add(topLight);
 
-  // Build knife group
+  // Build, scale, add — then aim camera at actual world-space center
   const group = buildKnifeModel(product, handleColorHex);
+  const boxPre = new THREE.Box3().setFromObject(group);
+  const sizePre = boxPre.getSize(new THREE.Vector3());
+  const maxDim = Math.max(sizePre.x, sizePre.y, sizePre.z);
+  const scale = 3.2 / maxDim;
+  group.scale.setScalar(scale);
   scene.add(group);
+  scene.updateMatrixWorld(true);
 
-  // Center/scale model based on blade type
   const box = new THREE.Box3().setFromObject(group);
   const center = box.getCenter(new THREE.Vector3());
   const size = box.getSize(new THREE.Vector3());
-  const maxDim = Math.max(size.x, size.y, size.z);
-  const scale = 4.5 / maxDim;
-  group.scale.setScalar(scale);
-  group.position.sub(center.multiplyScalar(scale));
-  group.rotation.x = -0.15;
+
+  // Frame model: distance based on FOV and largest dimension
+  const fovRad = camera.fov * Math.PI / 180;
+  const dist = (Math.max(size.x / camera.aspect, size.y) / 2) / Math.tan(fovRad / 2) * 1.25;
+  camera.position.set(center.x, center.y, center.z + dist);
+  camera.lookAt(center);
 
   return { renderer, scene, camera, group };
 }
@@ -3008,8 +3177,8 @@ function renderPreview(product, canvasId, accentColor, glbPath) {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.3;
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(35, canvas.width / canvas.height, 0.1, 100);
-    camera.position.set(0, 0, 7);
+    const camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 0.1, 100);
+    camera.position.set(0, 0, 10);
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     const key = new THREE.DirectionalLight(0xffffff, 2.0); key.position.set(3, 4, 3); scene.add(key);
     const fill = new THREE.DirectionalLight(0x8090b0, 0.6); fill.position.set(-3, 1, 2); scene.add(fill);
@@ -3031,13 +3200,19 @@ function renderPreview(product, canvasId, accentColor, glbPath) {
         .then(function(buf) {
           new THREE.GLTFLoader().parse(buf, '', function(gltf) {
             const model = gltf.scene;
-            const box = new THREE.Box3().setFromObject(model);
-            const center = box.getCenter(new THREE.Vector3());
-            const size = box.getSize(new THREE.Vector3());
-            const scale = 3.8 / Math.max(size.x, size.y, size.z);
+            const boxPre = new THREE.Box3().setFromObject(model);
+            const sizePre = boxPre.getSize(new THREE.Vector3());
+            const scale = 3.2 / Math.max(sizePre.x, sizePre.y, sizePre.z);
             model.scale.setScalar(scale);
-            model.position.sub(center.multiplyScalar(scale));
             scene.add(model);
+            scene.updateMatrixWorld(true);
+            const box2 = new THREE.Box3().setFromObject(model);
+            const center2 = box2.getCenter(new THREE.Vector3());
+            const size2 = box2.getSize(new THREE.Vector3());
+            const fovRad2 = camera.fov * Math.PI / 180;
+            const dist2 = (Math.max(size2.x / camera.aspect, size2.y) / 2) / Math.tan(fovRad2 / 2) * 1.25;
+            camera.position.set(center2.x, center2.y, center2.z + dist2);
+            camera.lookAt(center2);
             startAnim(model);
           }, fallback);
         })
@@ -3092,8 +3267,8 @@ function _startGLBModal(canvas, glbPath) {
   renderer.shadowMap.enabled = true;
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(35, canvas.width / canvas.height, 0.1, 100);
-  camera.position.set(0, 0, 7);
+  const camera = new THREE.PerspectiveCamera(45, canvas.width / canvas.height, 0.1, 100);
+  camera.position.set(0, 0, 10);
 
   scene.add(new THREE.AmbientLight(0xffffff, 1.2));
   const key = new THREE.DirectionalLight(0xffffff, 4.0); key.position.set(3, 4, 3); scene.add(key);
@@ -3107,14 +3282,20 @@ function _startGLBModal(canvas, glbPath) {
   modalCamera = camera;
 
   function _onLoaded(model) {
+    const boxPre = new THREE.Box3().setFromObject(model);
+    const sizePre = boxPre.getSize(new THREE.Vector3());
+    const maxDim = Math.max(sizePre.x, sizePre.y, sizePre.z);
+    const scale = 3.2 / maxDim;
+    model.scale.setScalar(scale);
+    scene.add(model);
+    scene.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(model);
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z);
-    const scale = 4.5 / maxDim;
-    model.scale.setScalar(scale);
-    model.position.sub(center.multiplyScalar(scale));
-    scene.add(model);
+    const fovRad = camera.fov * Math.PI / 180;
+    const dist = (Math.max(size.x / camera.aspect, size.y) / 2) / Math.tan(fovRad / 2) * 1.25;
+    camera.position.set(center.x, center.y, center.z + dist);
+    camera.lookAt(center);
     modalGroup = model;
     if (loadingEl) loadingEl.classList.remove('active');
     if (hintEl)    hintEl.style.opacity = '1';
@@ -3645,51 +3826,60 @@ window.addEventListener('resize', () => {
     else siteHdr.classList.remove('scrolled');
   }, {passive:true});
 
-  /* ─── SCROLL NAV ─── */
-  (function(){
-    var sections = [
-      {id:'hero',        label:'Home'},
-      {id:'company',     label:'About Us'},
-      {id:'heritage',    label:'Our Story'},
-      {id:'our-craft',   label:'Our Craft'},
-      {id:'catalogue',   label:'Collections'},
-      {id:'knife-configurator', label:'Configurator'},
-      {id:'showcase',    label:'Catalog'},
-      {id:'contact-us',  label:'Contact'}
-    ];
-    var nav = document.getElementById('scroll-nav');
-    var dots = [];
-    sections.forEach(function(s, i){
-      var el = document.getElementById(s.id);
-      if(!el) return;
-      var btn = document.createElement('button');
-      btn.className = 'sn-dot';
-      btn.setAttribute('aria-label', s.label);
-      btn.innerHTML = '<span class="sn-tooltip">'+s.label+'</span>';
-      btn.addEventListener('click', function(){
-        el.scrollIntoView({behavior:'smooth'});
-      });
-      nav.appendChild(btn);
-      dots.push({btn:btn, el:el});
-    });
+})();
 
-    var ticking = false;
-    function updateActive(){
-      var mid = window.scrollY + window.innerHeight * 0.4;
-      var best = 0;
-      for(var i = 0; i < dots.length; i++){
-        if(dots[i].el.getBoundingClientRect().top + window.scrollY <= mid + 1) best = i;
-      }
-      dots.forEach(function(d, i){
-        d.btn.classList.toggle('active', i === best);
-      });
-      ticking = false;
+// ── NAV SCROLL SPY ──
+(function(){
+  const sections = ['hero','company','heritage','our-craft','catalogue','collections','knife-configurator','showcase','contact-us'];
+  const mobItems = document.querySelectorAll('#mob-nav .mob-nav-item[data-section]');
+  const sideItems = document.querySelectorAll('#side-nav .side-nav-item[data-section]');
+  // Map header nav links to sections by their href
+  const hdrLinks = Array.from(document.querySelectorAll('.hdr-nav a[href^="#"]'));
+
+  function getActive(){
+    let active = sections[0];
+    const threshold = window.innerHeight * 0.5;
+    for(const id of sections){
+      const el = document.getElementById(id);
+      if(!el) continue;
+      const top = el.getBoundingClientRect().top;
+      if(top <= threshold) active = id;
     }
-    window.addEventListener('scroll', function(){
-      if(!ticking){ requestAnimationFrame(updateActive); ticking=true; }
-    }, {passive:true});
-    updateActive();
-  })();
+    return active;
+  }
+
+  function updateNav(){
+    const active = getActive();
+    mobItems.forEach(a => a.classList.toggle('active', a.dataset.section === active));
+    sideItems.forEach(a => a.classList.toggle('active', a.dataset.section === active));
+    hdrLinks.forEach(a => {
+      const sec = a.getAttribute('href').slice(1);
+      a.classList.toggle('active', sec === active);
+    });
+  }
+
+  window.addEventListener('scroll', updateNav, {passive:true});
+  updateNav();
+
+  // Smooth scroll for both navs
+  document.querySelectorAll('#mob-nav a[href^="#"], #side-nav a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if(target) target.scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  // Sync lang buttons on side nav
+  const origToggle = window.toggleLang;
+  if(origToggle){
+    window.toggleLang = function(){
+      origToggle();
+      const isZH = document.getElementById('hdrLangTxt') && document.getElementById('hdrLangTxt').textContent.trim() === 'ZH';
+      document.getElementById('sideNavEN').classList.toggle('lang-active', !isZH);
+      document.getElementById('sideNavZH').classList.toggle('lang-active', isZH);
+    };
+  }
 })();
 </script>
 </body>
