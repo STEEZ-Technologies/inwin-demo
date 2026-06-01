@@ -3850,65 +3850,87 @@ window.addEventListener('resize', () => {
 
 })();
 
-// ── NAV SCROLL SPY ──
+// ── NAV SCROLL SPY (IntersectionObserver) ──
 (function(){
-  const mobItems = document.querySelectorAll('#mob-nav .mob-nav-item[data-section]');
-  const sideItems = document.querySelectorAll('#side-nav .side-nav-item[data-section]');
-  const hdrLinks = Array.from(document.querySelectorAll('.hdr-nav a[href^="#"]'));
+  const sideItems = Array.from(document.querySelectorAll('#side-nav .side-nav-item[data-section]'));
+  const mobItems  = Array.from(document.querySelectorAll('#mob-nav  .mob-nav-item[data-section]'));
+  const hdrLinks  = Array.from(document.querySelectorAll('.hdr-nav a[href^="#"]'));
 
-  // nav icon section IDs in order
-  const navIds = Array.from(sideItems).map(a => a.dataset.section);
+  // ordered list of section IDs that have a nav icon
+  const navIds = sideItems.map(a => a.dataset.section);
 
-  function getActive(){
-    const threshold = window.innerHeight * 0.55;
+  // track which nav-sections are currently intersecting
+  const visible = new Set();
+
+  function setActive(id){
+    [sideItems, mobItems].forEach(list => {
+      list.forEach(a => {
+        const isActive = a.dataset.section === id;
+        const wasActive = a.classList.contains('active');
+        a.classList.toggle('active', isActive);
+        if(isActive && !wasActive){
+          a.classList.remove('just-activated');
+          void a.offsetWidth;
+          a.classList.add('just-activated');
+          setTimeout(() => a.classList.remove('just-activated'), 450);
+        }
+      });
+    });
+    hdrLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href').slice(1) === id);
+    });
+  }
+
+  function pickActive(){
+    // pick the first navId (in DOM order) that is currently visible
+    for(const id of navIds){
+      if(visible.has(id)) return id;
+    }
+    // fallback: topmost section above viewport midpoint
+    const mid = window.innerHeight * 0.5;
     let best = navIds[0];
     for(const id of navIds){
       const el = document.getElementById(id);
-      // skip hidden elements (display:none → offsetParent===null)
       if(!el || el.offsetParent === null) continue;
-      if(el.getBoundingClientRect().top <= threshold) best = id;
+      if(el.getBoundingClientRect().top <= mid) best = id;
     }
     return best;
   }
 
-  function updateNav(){
-    const active = getActive();
-    mobItems.forEach(a => a.classList.toggle('active', a.dataset.section === active));
-    sideItems.forEach(a => {
-      const isActive = a.dataset.section === active;
-      const wasActive = a.classList.contains('active');
-      a.classList.toggle('active', isActive);
-      if(isActive && !wasActive){
-        a.classList.remove('just-activated');
-        void a.offsetWidth;
-        a.classList.add('just-activated');
-        setTimeout(() => a.classList.remove('just-activated'), 450);
-      }
+  // observe each nav section
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(e.isIntersecting) visible.add(e.target.id);
+      else visible.delete(e.target.id);
     });
-    hdrLinks.forEach(a => {
-      const sec = a.getAttribute('href').slice(1);
-      a.classList.toggle('active', sec === active);
-    });
-  }
+    setActive(pickActive());
+  }, { threshold: 0.15 });
 
-  window.addEventListener('scroll', updateNav, {passive:true});
-  updateNav();
+  navIds.forEach(id => {
+    const el = document.getElementById(id);
+    if(el) observer.observe(el);
+  });
 
-  // Smooth scroll for both navs
-  document.querySelectorAll('#mob-nav a[href^="#"], #side-nav a[href^="#"]').forEach(a => {
+  // initial state
+  setActive(navIds[0]);
+
+  // click → smooth scroll + immediate active
+  document.querySelectorAll('#side-nav a[href^="#"], #mob-nav a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       e.preventDefault();
-      const target = document.getElementById(a.getAttribute('href').slice(1));
-      if(target) target.scrollIntoView({behavior:'smooth'});
+      const id = a.getAttribute('href').slice(1);
+      const target = document.getElementById(id);
+      if(target){ target.scrollIntoView({behavior:'smooth'}); }
+      if(navIds.includes(id)) setActive(id);
     });
   });
 
-  // Sync lang buttons on side nav
+  // sync lang buttons
   const origToggle = window.toggleLang;
   if(origToggle){
     window.toggleLang = function(){
       origToggle();
-      const isZH = document.getElementById('hdrLangTxt') && document.getElementById('hdrLangTxt').textContent.trim() === 'ZH';
+      const isZH = (document.getElementById('hdrLangTxt')||{}).textContent.trim() === 'ZH';
       document.getElementById('sideNavEN').classList.toggle('lang-active', !isZH);
       document.getElementById('sideNavZH').classList.toggle('lang-active', isZH);
     };
