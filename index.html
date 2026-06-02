@@ -1264,6 +1264,10 @@ body{padding-top:68px}
       <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       <span data-i18n="mob-compare">Configurator</span>
     </a>
+    <a class="mob-nav-item" href="#showcase" data-section="showcase">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span data-i18n="mob-catalog">Catalog</span>
+    </a>
     <a class="mob-nav-item" href="#contact-us" data-section="contact-us">
       <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
       <span data-i18n="mob-contact">Contact Us</span>
@@ -1290,6 +1294,9 @@ body{padding-top:68px}
   </a>
   <a class="side-nav-item" href="#knife-configurator" data-section="knife-configurator" data-tip="Configurator">
     <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+  </a>
+  <a class="side-nav-item" href="#showcase" data-section="showcase" data-tip="Catalog">
+    <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
   </a>
   <div class="side-nav-divider"></div>
   <button class="side-nav-item side-nav-lang lang-active" id="sideNavEN" onclick="if(_lang!=='en'){toggleLang()}" data-tip="English">
@@ -3840,7 +3847,7 @@ window.addEventListener('resize', () => {
 
 // ── NAV SCROLL SPY ──
 (function(){
-  var navIds = ['hero','heritage','our-craft','catalogue','knife-configurator','contact-us'];
+  var navIds = ['hero','heritage','our-craft','catalogue','knife-configurator','showcase','contact-us'];
 
   var SIDE_ON  = 'color:#ffffff!important;background:rgba(30,30,38,0.95)!important;border:2px solid transparent!important;box-shadow:0 0 0 1.5px rgba(192,57,43,0.65)!important;border-radius:10px!important;';
   var SIDE_OFF = 'color:rgba(240,237,232,0.4)!important;background:transparent!important;border:2px solid transparent!important;box-shadow:none!important;';
