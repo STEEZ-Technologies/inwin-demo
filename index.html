@@ -3746,6 +3746,7 @@ window.addEventListener('resize', () => {
 // ─────────────────────────────────────────────────────────────────────────────
 (function(){
   const track  = document.getElementById('pshTrack');
+  if(!track) return;
   const dots   = document.querySelectorAll('.psh-dot');
   const slides = track.querySelectorAll('.psh-slide');
   const total  = slides.length;
