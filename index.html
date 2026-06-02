@@ -3840,55 +3840,49 @@ window.addEventListener('resize', () => {
 // ── NAV SCROLL SPY ──
 (function(){
   var navIds = ['hero','heritage','our-craft','catalogue','knife-configurator','contact-us'];
-  var wasIntersecting = {};
+
+  var SIDE_ON  = 'color:#c0392b!important;background:rgba(192,57,43,0.18)!important;border:2px solid #c0392b!important;box-shadow:0 0 14px rgba(192,57,43,0.5)!important;border-radius:10px!important;';
+  var SIDE_OFF = 'color:rgba(240,237,232,0.4);background:transparent;border:2px solid transparent;box-shadow:none;';
+  var MOB_ON   = 'color:#ffffff;background:rgba(30,30,38,0.95);border-radius:12px;box-shadow:0 0 0 1.5px rgba(192,57,43,0.65);';
+  var MOB_OFF  = 'color:rgba(240,237,232,0.45);background:transparent;border-radius:0;box-shadow:none;';
 
   function setActive(id){
     navIds.forEach(function(sid){
+      var on = sid === id;
       document.querySelectorAll('[data-section="'+sid+'"]').forEach(function(el){
-        el.removeAttribute('style');
-        el.classList.toggle('active', sid === id);
+        var isMob = el.classList.contains('mob-nav-item');
+        el.setAttribute('style', on ? (isMob ? MOB_ON : SIDE_ON) : (isMob ? MOB_OFF : SIDE_OFF));
       });
     });
   }
 
-  // Center-band observer: fires when a section's TOP crosses the middle 10% of the viewport.
-  // wasIntersecting guard prevents the initial async observer batch from corrupting page-load state.
-  var observer = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      var id = entry.target.id;
-      if(entry.isIntersecting){
-        wasIntersecting[id] = true;
-        setActive(id);
-      } else if(wasIntersecting[id] && entry.boundingClientRect.top > 0){
-        // Section top dropped below center band = user scrolled UP past it → activate previous
-        delete wasIntersecting[id];
-        var idx = navIds.indexOf(id);
-        setActive(navIds[idx > 0 ? idx - 1 : 0]);
-      }
-      // top < 0 = section scrolled upward past center → next section's enter event handles activation
+  function pickActive(){
+    var best = navIds[0];
+    var mid = window.innerHeight / 2;
+    navIds.forEach(function(id){
+      var sec = document.getElementById(id);
+      if(sec && sec.getBoundingClientRect().top <= mid) best = id;
     });
-  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+    return best;
+  }
 
-  navIds.forEach(function(id){
-    var el = document.getElementById(id);
-    if(el) observer.observe(el);
-  });
+  var raf = null;
+  window.addEventListener('scroll', function(){
+    if(raf) return;
+    raf = requestAnimationFrame(function(){
+      setActive(pickActive());
+      raf = null;
+    });
+  }, {passive:true});
 
-  // Synchronous initial state — runs before the observer's first async callback
-  var best = navIds[0], center = window.innerHeight / 2;
-  navIds.forEach(function(id){
-    var el = document.getElementById(id);
-    if(el && el.getBoundingClientRect().top <= center) best = id;
-  });
-  setActive(best);
+  setActive(pickActive());
 
-  // Smooth-scroll + immediate highlight on nav click
   document.querySelectorAll('#side-nav a[href^="#"], #mob-nav a[href^="#"]').forEach(function(a){
     a.addEventListener('click', function(e){
       e.preventDefault();
       var id = a.getAttribute('href').slice(1);
-      var target = document.getElementById(id);
-      if(target) target.scrollIntoView({behavior:'smooth'});
+      var sec = document.getElementById(id);
+      if(sec) sec.scrollIntoView({behavior:'smooth'});
       if(navIds.indexOf(id) > -1) setActive(id);
     });
   });
