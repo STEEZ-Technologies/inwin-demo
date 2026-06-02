@@ -3840,6 +3840,7 @@ window.addEventListener('resize', () => {
 // ── NAV SCROLL SPY ──
 (function(){
   var navIds = ['hero','heritage','our-craft','catalogue','knife-configurator','contact-us'];
+  var wasIntersecting = {};
 
   function setActive(id){
     navIds.forEach(function(sid){
@@ -3850,20 +3851,21 @@ window.addEventListener('resize', () => {
     });
   }
 
-  // rootMargin creates a thin band at the center of viewport (45%–55%).
-  // When a section's TOP enters this band (scroll down) → activate it.
-  // When a section's TOP exits below this band (scroll up) → activate previous section.
+  // Center-band observer: fires when a section's TOP crosses the middle 10% of the viewport.
+  // wasIntersecting guard prevents the initial async observer batch from corrupting page-load state.
   var observer = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
       var id = entry.target.id;
       if(entry.isIntersecting){
+        wasIntersecting[id] = true;
         setActive(id);
-      } else if(entry.boundingClientRect.top > 0){
-        // top went below center band = user scrolled up past this section
+      } else if(wasIntersecting[id] && entry.boundingClientRect.top > 0){
+        // Section top dropped below center band = user scrolled UP past it → activate previous
+        delete wasIntersecting[id];
         var idx = navIds.indexOf(id);
         setActive(navIds[idx > 0 ? idx - 1 : 0]);
       }
-      // top < 0 = scrolled down past this section → next section's enter event handles it
+      // top < 0 = section scrolled upward past center → next section's enter event handles activation
     });
   }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
 
@@ -3872,7 +3874,7 @@ window.addEventListener('resize', () => {
     if(el) observer.observe(el);
   });
 
-  // Initial state on page load
+  // Synchronous initial state — runs before the observer's first async callback
   var best = navIds[0], center = window.innerHeight / 2;
   navIds.forEach(function(id){
     var el = document.getElementById(id);
@@ -3880,6 +3882,7 @@ window.addEventListener('resize', () => {
   });
   setActive(best);
 
+  // Smooth-scroll + immediate highlight on nav click
   document.querySelectorAll('#side-nav a[href^="#"], #mob-nav a[href^="#"]').forEach(function(a){
     a.addEventListener('click', function(e){
       e.preventDefault();
