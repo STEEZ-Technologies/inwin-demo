@@ -2068,7 +2068,12 @@ function applyLang(lang){
     var k = el.getAttribute('data-i18n');
     if(t[k] !== undefined) el.textContent = t[k];
   });
-  document.getElementById('hdrLangTxt').textContent = lang === 'en' ? 'EN' : '中文';
+  var hdrLangTxt = document.getElementById('hdrLangTxt');
+  if(hdrLangTxt) hdrLangTxt.textContent = lang === 'en' ? 'EN' : '中文';
+  var enBtn = document.getElementById('sideNavEN');
+  var zhBtn = document.getElementById('sideNavZH');
+  if(enBtn) enBtn.classList.toggle('lang-active', lang === 'en');
+  if(zhBtn) zhBtn.classList.toggle('lang-active', lang === 'zh');
 
   /* carousel cards */
   document.querySelectorAll('.c-card[data-cat-id]').forEach(function(card){
