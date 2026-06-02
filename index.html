@@ -1054,7 +1054,7 @@ body{padding-top:68px}
   display:flex;flex-direction:column;align-items:center;gap:3px;
   text-decoration:none;cursor:pointer;
   color:rgba(240,237,232,0.45);
-  transition:color 0.2s ease;
+  transition:all 0.3s ease;
   padding:4px 10px;
   -webkit-tap-highlight-color:transparent;
   min-width:56px;
@@ -3841,34 +3841,32 @@ window.addEventListener('resize', () => {
 (function(){
   var navIds = ['hero','heritage','our-craft','catalogue','knife-configurator','contact-us'];
 
-  var ACTIVE_STYLE = 'border:2px solid #c0392b !important;background:rgba(192,57,43,0.2) !important;box-shadow:0 0 10px rgba(192,57,43,0.5) !important;border-radius:10px;';
-  var IDLE_STYLE   = 'border:2px solid transparent;background:transparent;box-shadow:none;';
-
-  function activate(id){
+  function setActive(id){
     navIds.forEach(function(sid){
-      var items = document.querySelectorAll('[data-section="'+sid+'"]');
-      items.forEach(function(el){
-        var isActive = sid === id;
-        el.setAttribute('style', isActive ? ACTIVE_STYLE : IDLE_STYLE);
-        var svg = el.querySelector('svg');
-        if(svg) svg.style.stroke = isActive ? '#c0392b' : '';
+      document.querySelectorAll('[data-section="'+sid+'"]').forEach(function(el){
+        el.removeAttribute('style');
+        el.classList.toggle('active', sid === id);
       });
     });
   }
 
-  function getActive(){
+  function pickActive(){
     var best = navIds[0];
     var center = window.innerHeight / 2;
-    for(var i = 0; i < navIds.length; i++){
-      var el = document.getElementById(navIds[i]);
-      if(!el) continue;
-      if(el.getBoundingClientRect().top <= center) best = navIds[i];
-    }
-    return best;
+    navIds.forEach(function(id){
+      var el = document.getElementById(id);
+      if(el && el.getBoundingClientRect().top <= center) best = id;
+    });
+    setActive(best);
   }
 
-  window.addEventListener('scroll', function(){ activate(getActive()); }, {passive:true});
-  activate(getActive());
+  var observer = new IntersectionObserver(function(){ pickActive(); }, { threshold: 0 });
+  navIds.forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) observer.observe(el);
+  });
+
+  pickActive();
 
   document.querySelectorAll('#side-nav a[href^="#"], #mob-nav a[href^="#"]').forEach(function(a){
     a.addEventListener('click', function(e){
@@ -3876,7 +3874,7 @@ window.addEventListener('resize', () => {
       var id = a.getAttribute('href').slice(1);
       var target = document.getElementById(id);
       if(target) target.scrollIntoView({behavior:'smooth'});
-      if(navIds.indexOf(id) > -1) activate(id);
+      if(navIds.indexOf(id) > -1) setActive(id);
     });
   });
 })();
