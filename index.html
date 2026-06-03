@@ -934,26 +934,26 @@ section{padding:80px 0}
 .cu-label::before{content:'';width:30px;height:1px;background:var(--red);flex-shrink:0}
 .cu-title{font-family:var(--font-h);font-size:clamp(28px,5vw,52px);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--white);line-height:1.05}
 .cu-title em{color:var(--red);font-style:normal}
-.cu-cols{display:grid;grid-template-columns:1fr auto;gap:clamp(32px,5vw,72px);align-items:start}
-.cu-col-left{flex:1}
-.cu-col-right{width:220px;flex-shrink:0}
+.cu-cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,5vw,72px);align-items:start}
+.cu-col-left{display:flex;flex-direction:column}
+.cu-col-right{display:flex;flex-direction:column;gap:clamp(16px,2vw,24px)}
 .cu-wc-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:24px;text-align:center}
-.cu-wc-card-title{font-family:var(--font-h);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--white3);margin-bottom:20px}
+.cu-wc-card-title{font-family:var(--font-h);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--white3);margin-bottom:16px}
 .cu-wc-qr{width:172px;height:172px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid rgba(255,255,255,0.08);margin:0 auto}
 .cu-wc-qr img{width:152px;height:152px;object-fit:contain}
 .cu-wc-qr-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px}
 .cu-wc-qr-ph span{font-size:9px;color:#888;text-align:center;letter-spacing:0.04em;line-height:1.4}
 .cu-wc-caption{font-family:var(--font-b);font-size:14px;font-weight:500;color:var(--white);letter-spacing:-0.01em;margin-bottom:4px}
 .cu-wc-sub{font-family:var(--font-b);font-size:11px;color:var(--white3);line-height:1.5}
-@media(max-width:640px){.cu-cols{grid-template-columns:1fr}.cu-col-right{width:100%}.cu-wc-qr{margin:0}}
-.cu-details{margin-bottom:16px}
-.cu-cd-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+@media(max-width:640px){.cu-cols{grid-template-columns:1fr}.cu-wc-qr{margin:0}}
+.cu-details{display:flex;flex-direction:column}
+.cu-cd-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
 .cu-cd-row:last-child{border-bottom:none}
-.cu-cd-icon{width:26px;height:26px;border:1px solid rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.cu-cd-icon svg{width:11px;height:11px;stroke:var(--red);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cu-cd-icon{width:32px;height:32px;border:1px solid rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cu-cd-icon svg{width:13px;height:13px;stroke:var(--red);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .cu-cd-lbl{font-family:var(--font-h);font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:rgba(240,237,232,0.35)}
 .cu-cd-val{font-family:var(--font-b);font-size:13px;color:var(--white)}
-.cu-map{border-radius:8px;overflow:hidden;height:190px;border:1px solid rgba(255,255,255,0.07);position:relative}
+.cu-map{border-radius:12px;overflow:hidden;aspect-ratio:1/1;border:1px solid rgba(255,255,255,0.07);position:relative}
 .cu-map iframe{width:100%;height:100%;border:none;display:block;filter:grayscale(1) brightness(0.45) contrast(1.1)}
 
 /* ─── SITE HEADER / NAVBAR ─── */
@@ -1805,7 +1805,7 @@ body{padding-top:68px}
       <h2 class="cu-title" id="i-cu-title">Let's Talk<br><em>Business</em></h2>
     </div>
     <div class="cu-cols">
-      <!-- Left: details + map -->
+      <!-- Left: Phone, Email, Location -->
       <div class="cu-col-left">
         <div class="cu-details">
           <div class="cu-cd-row">
@@ -1821,12 +1821,12 @@ body{padding-top:68px}
             <div><div class="cu-cd-lbl" id="i-con-d-l">Location</div><div class="cu-cd-val" id="i-con-d-loc">Yangdong, Guangdong, China</div></div>
           </div>
         </div>
+      </div>
+      <!-- Right: Map (square) + QR -->
+      <div class="cu-col-right">
         <div class="cu-map">
           <iframe src="https://map.baidu.com/?newmap=1&ie=utf-8&s=s%26wd%3D%E9%98%B3%E6%B1%9F%E5%8C%BA%2C%E9%98%B3%E6%B1%9F%2C%E5%B9%BF%E4%B8%9C%E7%9C%81%2C%E4%B8%AD%E5%9B%BD" title="INWIN — Yangdong" allowfullscreen loading="lazy"></iframe>
         </div>
-      </div>
-      <!-- Right: QR -->
-      <div class="cu-col-right">
         <div class="cu-wc-card">
           <div class="cu-wc-card-title" id="i-con-wc-t">WeChat Business</div>
           <div class="cu-wc-qr" id="cuWcQr"></div>
