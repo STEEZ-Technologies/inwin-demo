@@ -3572,7 +3572,7 @@ function openModal(product, catInfo) {
   `;
 
   // Canvas sizing
-  const box3d = document.querySelector('.modal-3d');
+  const box3d = document.querySelector('.modal-3d-inner') || document.querySelector('.modal-3d');
   resizeModalCanvas(canvas, box3d);
 
   // Init Three.js scene — GLB if available, else procedural
@@ -3593,17 +3593,15 @@ function openModal(product, catInfo) {
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  requestAnimationFrame(() => {
-    const box = document.querySelector('.modal-3d');
-    resizeModalCanvas(canvas, box);
-    if (modalGroup && modalCamera) {
-      const isWide = currentProduct && (currentProduct.bladeType === 'board' || currentProduct.bladeType === 'cookware' || currentProduct.bladeType === 'none');
-      frameSceneObject(modalCamera, modalGroup, {
-        padding: isWide ? 1.55 : 1.25,
-        verticalOffset: 0.08,
-      });
-    }
-  });
+  updateModalView();
+  requestAnimationFrame(updateModalView);
+  setTimeout(updateModalView, 120);
+  const modalBox = modal.querySelector('.modal-box');
+  if (modalBox) {
+    modalBox.addEventListener('transitionend', event => {
+      if (event.propertyName === 'transform') updateModalView();
+    }, { once: true });
+  }
 
   // Color swatches
   info.querySelectorAll('.m-swatch').forEach(sw => {
@@ -3799,11 +3797,11 @@ function resizeModalCanvas(canvas, box3d) {
   }
 }
 
-// Handle window resize for modal canvas
-window.addEventListener('resize', () => {
+function updateModalView() {
   const canvas = document.getElementById('modal-canvas');
-  const box = canvas.parentElement;
-  resizeModalCanvas(canvas, box);
+  const box3d = document.querySelector('.modal-3d');
+  if (!canvas || !box3d) return;
+  resizeModalCanvas(canvas, box3d);
   if (modalGroup && modalCamera) {
     const isWideModel = currentProduct && (currentProduct.bladeType === 'board' || currentProduct.bladeType === 'cookware' || currentProduct.bladeType === 'none');
     frameSceneObject(modalCamera, modalGroup, {
@@ -3811,6 +3809,11 @@ window.addEventListener('resize', () => {
       verticalOffset: 0.08,
     });
   }
+}
+
+// Handle window resize for modal canvas
+window.addEventListener('resize', () => {
+  updateModalView();
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
