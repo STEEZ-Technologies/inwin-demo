@@ -3030,7 +3030,8 @@ function createKnifeScene(canvas, product, handleColorHex) {
   const boxPre = new THREE.Box3().setFromObject(group);
   const sizePre = boxPre.getSize(new THREE.Vector3());
   const maxDim = Math.max(sizePre.x, sizePre.y, sizePre.z);
-  const scale = 3.2 / maxDim;
+  const scaleTarget = (product.bladeType === 'board' || product.bladeType === 'cookware' || product.bladeType === 'none') ? 2.1 : 3.2;
+  const scale = scaleTarget / maxDim;
   group.scale.setScalar(scale);
 
   const boxCentered = new THREE.Box3().setFromObject(group);
@@ -3283,7 +3284,9 @@ function renderPreview(product, canvasId, accentColor, glbPath) {
             const model = gltf.scene;
             const boxPre = new THREE.Box3().setFromObject(model);
             const sizePre = boxPre.getSize(new THREE.Vector3());
-            const scale = 3.2 / Math.max(sizePre.x, sizePre.y, sizePre.z);
+            const isWideModel = product.bladeType === 'board' || product.bladeType === 'cookware' || product.bladeType === 'none';
+            const scaleTarget = isWideModel ? 1.8 : 3.2;
+            const scale = scaleTarget / Math.max(sizePre.x, sizePre.y, sizePre.z);
             model.scale.setScalar(scale);
             const centerOffset = boxPre.getCenter(new THREE.Vector3());
             model.position.sub(centerOffset);
@@ -3293,8 +3296,9 @@ function renderPreview(product, canvasId, accentColor, glbPath) {
             const center2 = box2.getCenter(new THREE.Vector3());
             const size2 = box2.getSize(new THREE.Vector3());
             const fovRad2 = camera.fov * Math.PI / 180;
-            const dist2 = (Math.max(size2.x / camera.aspect, size2.y) / 2) / Math.tan(fovRad2 / 2) * 1.25;
-            camera.position.set(center2.x, center2.y + Math.max(size2.y * 0.06, 0.1), center2.z + dist2);
+            const padding = isWideModel ? 1.55 : 1.35;
+            const dist2 = (Math.max(size2.x / camera.aspect, size2.y) / 2) / Math.tan(fovRad2 / 2) * padding;
+            camera.position.set(center2.x, center2.y + Math.max(size2.y * 0.08, 0.1), center2.z + dist2);
             camera.lookAt(center2);
             camera.updateProjectionMatrix();
             startAnim(model);
@@ -3369,7 +3373,9 @@ function _startGLBModal(canvas, glbPath) {
     const boxPre = new THREE.Box3().setFromObject(model);
     const sizePre = boxPre.getSize(new THREE.Vector3());
     const maxDim = Math.max(sizePre.x, sizePre.y, sizePre.z);
-    const scale = 3.2 / maxDim;
+    const isWideModel = currentProduct && (currentProduct.bladeType === 'board' || currentProduct.bladeType === 'cookware' || currentProduct.bladeType === 'none');
+    const scaleTarget = isWideModel ? 1.8 : 3.2;
+    const scale = scaleTarget / maxDim;
     model.scale.setScalar(scale);
 
     const centerOffset = boxPre.getCenter(new THREE.Vector3());
@@ -3380,8 +3386,9 @@ function _startGLBModal(canvas, glbPath) {
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
     const fovRad = camera.fov * Math.PI / 180;
-    const dist = (Math.max(size.x / camera.aspect, size.y) / 2) / Math.tan(fovRad / 2) * 1.25;
-    camera.position.set(center.x, center.y + Math.max(size.y * 0.06, 0.1), center.z + dist);
+    const padding = isWideModel ? 1.55 : 1.25;
+    const dist = (Math.max(size.x / camera.aspect, size.y) / 2) / Math.tan(fovRad / 2) * padding;
+    camera.position.set(center.x, center.y + Math.max(size.y * 0.08, 0.1), center.z + dist);
     camera.lookAt(center);
     camera.updateProjectionMatrix();
     modalGroup = model;
