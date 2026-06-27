@@ -3043,12 +3043,15 @@ function createKnifeScene(canvas, product, handleColorHex) {
 
   const box = new THREE.Box3().setFromObject(group);
   const center = box.getCenter(new THREE.Vector3());
-  const size = box.getSize(new THREE.Vector3());
-
-  // Frame model: distance based on FOV and largest dimension
-  const fovRad = camera.fov * Math.PI / 180;
-  const dist = (Math.max(size.x / camera.aspect, size.y) / 2) / Math.tan(fovRad / 2) * 1.25;
-  camera.position.set(center.x, center.y + Math.max(size.y * 0.06, 0.1), center.z + dist);
+  const sphere = new THREE.Sphere();
+  box.getBoundingSphere(sphere);
+  const radius = sphere.radius;
+  const vFov = camera.fov * Math.PI / 180;
+  const hFov = 2 * Math.atan(Math.tan(vFov / 2) * camera.aspect);
+  const distV = radius / Math.sin(vFov / 2);
+  const distH = radius / Math.sin(hFov / 2);
+  const dist = Math.max(distV, distH) * 1.25;
+  camera.position.set(center.x, center.y + Math.max(radius * 0.08, 0.15), center.z + dist);
   camera.lookAt(center);
   camera.updateProjectionMatrix();
 
@@ -3294,11 +3297,15 @@ function renderPreview(product, canvasId, accentColor, glbPath) {
             scene.updateMatrixWorld(true);
             const box2 = new THREE.Box3().setFromObject(model);
             const center2 = box2.getCenter(new THREE.Vector3());
-            const size2 = box2.getSize(new THREE.Vector3());
-            const fovRad2 = camera.fov * Math.PI / 180;
-            const padding = isWideModel ? 1.55 : 1.35;
-            const dist2 = (Math.max(size2.x / camera.aspect, size2.y) / 2) / Math.tan(fovRad2 / 2) * padding;
-            camera.position.set(center2.x, center2.y + Math.max(size2.y * 0.08, 0.1), center2.z + dist2);
+            const sphere2 = new THREE.Sphere();
+            box2.getBoundingSphere(sphere2);
+            const radius2 = sphere2.radius;
+            const vFov2 = camera.fov * Math.PI / 180;
+            const hFov2 = 2 * Math.atan(Math.tan(vFov2 / 2) * camera.aspect);
+            const distV2 = radius2 / Math.sin(vFov2 / 2);
+            const distH2 = radius2 / Math.sin(hFov2 / 2);
+            const dist2 = Math.max(distV2, distH2) * 1.4;
+            camera.position.set(center2.x, center2.y + Math.max(radius2 * 0.08, 0.1), center2.z + dist2);
             camera.lookAt(center2);
             camera.updateProjectionMatrix();
             startAnim(model);
@@ -3384,11 +3391,16 @@ function _startGLBModal(canvas, glbPath) {
     scene.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(model);
     const center = box.getCenter(new THREE.Vector3());
-    const size = box.getSize(new THREE.Vector3());
-    const fovRad = camera.fov * Math.PI / 180;
+    const sphere = new THREE.Sphere();
+    box.getBoundingSphere(sphere);
+    const radius = sphere.radius;
+    const vFov = camera.fov * Math.PI / 180;
+    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * camera.aspect);
+    const distV = radius / Math.sin(vFov / 2);
+    const distH = radius / Math.sin(hFov / 2);
     const padding = isWideModel ? 1.55 : 1.25;
-    const dist = (Math.max(size.x / camera.aspect, size.y) / 2) / Math.tan(fovRad / 2) * padding;
-    camera.position.set(center.x, center.y + Math.max(size.y * 0.08, 0.1), center.z + dist);
+    const dist = Math.max(distV, distH) * padding;
+    camera.position.set(center.x, center.y + Math.max(radius * 0.08, 0.1), center.z + dist);
     camera.lookAt(center);
     camera.updateProjectionMatrix();
     modalGroup = model;
