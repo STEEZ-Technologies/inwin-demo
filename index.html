@@ -390,10 +390,15 @@ section{padding:80px 0}
 #modal.open .modal-box{transform:translateY(0) scale(1);opacity:1}
 @media(max-width:700px){.modal-box{grid-template-columns:1fr;max-height:95vh;overflow-y:auto}}
 .modal-3d{
-  background:radial-gradient(ellipse at 50% 40%, #2a3040 0%, #0d1018 100%);position:relative;
-  height:400px;overflow:hidden;
+  background:radial-gradient(ellipse at 50% 40%, #2a3040 0%, #0d1018 100%);
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:360px;
+  overflow:hidden;
 }
-@media(max-width:700px){.modal-3d{height:300px}}
+@media(max-width:700px){.modal-3d{height:320px;min-height:320px}}
 #modal-canvas{width:100%;height:100%;display:block;cursor:grab}
 #modal-canvas:active{cursor:grabbing}
 .modal-hint{
@@ -508,6 +513,30 @@ section{padding:80px 0}
   transition:background 0.3s,border-color 0.3s;
 }
 .pc-card-btn:hover{background:var(--red);border-color:var(--red)}
+
+@media(max-width:700px){
+  .pc-filters {
+    gap: 10px;
+    padding: 0 16px;
+  }
+  .pc-filter {
+    flex: 1 1 48%;
+    min-width: 110px;
+    padding: 10px 14px;
+    font-size: 9px;
+    line-height: 1.4;
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    text-align: center;
+  }
+  .pc-filter.active {
+    padding: 10px 14px;
+  }
+  .pc-grid {
+    gap: 14px;
+  }
+}
 
 /* ─── FOOTER ─── */
 #footer{
@@ -2989,13 +3018,18 @@ function createKnifeScene(canvas, product, handleColorHex) {
   topLight.position.set(0, 5, 1);
   scene.add(topLight);
 
-  // Build, scale, add — then aim camera at actual world-space center
+  // Build, scale, add — then center the model and place the camera
   const group = buildKnifeModel(product, handleColorHex);
   const boxPre = new THREE.Box3().setFromObject(group);
   const sizePre = boxPre.getSize(new THREE.Vector3());
   const maxDim = Math.max(sizePre.x, sizePre.y, sizePre.z);
   const scale = 3.2 / maxDim;
   group.scale.setScalar(scale);
+
+  const boxCentered = new THREE.Box3().setFromObject(group);
+  const centerOffset = boxCentered.getCenter(new THREE.Vector3());
+  group.position.sub(centerOffset);
+
   scene.add(group);
   scene.updateMatrixWorld(true);
 
@@ -3006,8 +3040,9 @@ function createKnifeScene(canvas, product, handleColorHex) {
   // Frame model: distance based on FOV and largest dimension
   const fovRad = camera.fov * Math.PI / 180;
   const dist = (Math.max(size.x / camera.aspect, size.y) / 2) / Math.tan(fovRad / 2) * 1.25;
-  camera.position.set(center.x, center.y, center.z + dist);
+  camera.position.set(center.x, center.y + Math.max(size.y * 0.06, 0.1), center.z + dist);
   camera.lookAt(center);
+  camera.updateProjectionMatrix();
 
   return { renderer, scene, camera, group };
 }
@@ -3243,6 +3278,8 @@ function renderPreview(product, canvasId, accentColor, glbPath) {
             const sizePre = boxPre.getSize(new THREE.Vector3());
             const scale = 3.2 / Math.max(sizePre.x, sizePre.y, sizePre.z);
             model.scale.setScalar(scale);
+            const centerOffset = boxPre.getCenter(new THREE.Vector3());
+            model.position.sub(centerOffset);
             scene.add(model);
             scene.updateMatrixWorld(true);
             const box2 = new THREE.Box3().setFromObject(model);
@@ -3250,8 +3287,9 @@ function renderPreview(product, canvasId, accentColor, glbPath) {
             const size2 = box2.getSize(new THREE.Vector3());
             const fovRad2 = camera.fov * Math.PI / 180;
             const dist2 = (Math.max(size2.x / camera.aspect, size2.y) / 2) / Math.tan(fovRad2 / 2) * 1.25;
-            camera.position.set(center2.x, center2.y, center2.z + dist2);
+            camera.position.set(center2.x, center2.y + Math.max(size2.y * 0.06, 0.1), center2.z + dist2);
             camera.lookAt(center2);
+            camera.updateProjectionMatrix();
             startAnim(model);
           }, fallback);
         })
@@ -3326,6 +3364,9 @@ function _startGLBModal(canvas, glbPath) {
     const maxDim = Math.max(sizePre.x, sizePre.y, sizePre.z);
     const scale = 3.2 / maxDim;
     model.scale.setScalar(scale);
+
+    const centerOffset = boxPre.getCenter(new THREE.Vector3());
+    model.position.sub(centerOffset);
     scene.add(model);
     scene.updateMatrixWorld(true);
     const box = new THREE.Box3().setFromObject(model);
@@ -3333,8 +3374,9 @@ function _startGLBModal(canvas, glbPath) {
     const size = box.getSize(new THREE.Vector3());
     const fovRad = camera.fov * Math.PI / 180;
     const dist = (Math.max(size.x / camera.aspect, size.y) / 2) / Math.tan(fovRad / 2) * 1.25;
-    camera.position.set(center.x, center.y, center.z + dist);
+    camera.position.set(center.x, center.y + Math.max(size.y * 0.06, 0.1), center.z + dist);
     camera.lookAt(center);
+    camera.updateProjectionMatrix();
     modalGroup = model;
     if (loadingEl) loadingEl.classList.remove('active');
     if (hintEl)    hintEl.style.opacity = '1';
