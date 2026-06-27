@@ -3034,28 +3034,35 @@ function createKnifeScene(canvas, product, handleColorHex) {
   const scale = scaleTarget / maxDim;
   group.scale.setScalar(scale);
 
-  const boxCentered = new THREE.Box3().setFromObject(group);
-  const centerOffset = boxCentered.getCenter(new THREE.Vector3());
-  group.position.sub(centerOffset);
-
   scene.add(group);
-  scene.updateMatrixWorld(true);
+  frameSceneObject(camera, group, {
+    padding: (product.bladeType === 'board' || product.bladeType === 'cookware' || product.bladeType === 'none') ? 1.55 : 1.25,
+    verticalOffset: 0.08,
+  });
 
-  const box = new THREE.Box3().setFromObject(group);
+  return { renderer, scene, camera, group };
+}
+
+function frameSceneObject(camera, object3D, options = {}) {
+  const { padding = 1.35, verticalOffset = 0.08 } = options;
+  const box = new THREE.Box3().setFromObject(object3D);
   const center = box.getCenter(new THREE.Vector3());
   const sphere = new THREE.Sphere();
   box.getBoundingSphere(sphere);
   const radius = sphere.radius;
+
+  object3D.position.sub(center);
+  object3D.updateMatrixWorld(true);
+
   const vFov = camera.fov * Math.PI / 180;
   const hFov = 2 * Math.atan(Math.tan(vFov / 2) * camera.aspect);
   const distV = radius / Math.sin(vFov / 2);
   const distH = radius / Math.sin(hFov / 2);
-  const dist = Math.max(distV, distH) * 1.25;
-  camera.position.set(center.x, center.y + Math.max(radius * 0.08, 0.15), center.z + dist);
+  const dist = Math.max(distV, distH) * padding;
+
+  camera.position.set(center.x, center.y + Math.max(radius * verticalOffset, 0.1), center.z + dist);
   camera.lookAt(center);
   camera.updateProjectionMatrix();
-
-  return { renderer, scene, camera, group };
 }
 
 function buildKnifeModel(product, handleColorHex) {
@@ -3291,23 +3298,11 @@ function renderPreview(product, canvasId, accentColor, glbPath) {
             const scaleTarget = isWideModel ? 1.8 : 3.2;
             const scale = scaleTarget / Math.max(sizePre.x, sizePre.y, sizePre.z);
             model.scale.setScalar(scale);
-            const centerOffset = boxPre.getCenter(new THREE.Vector3());
-            model.position.sub(centerOffset);
             scene.add(model);
-            scene.updateMatrixWorld(true);
-            const box2 = new THREE.Box3().setFromObject(model);
-            const center2 = box2.getCenter(new THREE.Vector3());
-            const sphere2 = new THREE.Sphere();
-            box2.getBoundingSphere(sphere2);
-            const radius2 = sphere2.radius;
-            const vFov2 = camera.fov * Math.PI / 180;
-            const hFov2 = 2 * Math.atan(Math.tan(vFov2 / 2) * camera.aspect);
-            const distV2 = radius2 / Math.sin(vFov2 / 2);
-            const distH2 = radius2 / Math.sin(hFov2 / 2);
-            const dist2 = Math.max(distV2, distH2) * 1.4;
-            camera.position.set(center2.x, center2.y + Math.max(radius2 * 0.08, 0.1), center2.z + dist2);
-            camera.lookAt(center2);
-            camera.updateProjectionMatrix();
+            frameSceneObject(camera, model, {
+              padding: isWideModel ? 1.55 : 1.35,
+              verticalOffset: 0.08,
+            });
             startAnim(model);
           }, fallback);
         })
@@ -3389,20 +3384,10 @@ function _startGLBModal(canvas, glbPath) {
     model.position.sub(centerOffset);
     scene.add(model);
     scene.updateMatrixWorld(true);
-    const box = new THREE.Box3().setFromObject(model);
-    const center = box.getCenter(new THREE.Vector3());
-    const sphere = new THREE.Sphere();
-    box.getBoundingSphere(sphere);
-    const radius = sphere.radius;
-    const vFov = camera.fov * Math.PI / 180;
-    const hFov = 2 * Math.atan(Math.tan(vFov / 2) * camera.aspect);
-    const distV = radius / Math.sin(vFov / 2);
-    const distH = radius / Math.sin(hFov / 2);
-    const padding = isWideModel ? 1.55 : 1.25;
-    const dist = Math.max(distV, distH) * padding;
-    camera.position.set(center.x, center.y + Math.max(radius * 0.08, 0.1), center.z + dist);
-    camera.lookAt(center);
-    camera.updateProjectionMatrix();
+    frameSceneObject(camera, model, {
+      padding: isWideModel ? 1.55 : 1.25,
+      verticalOffset: 0.08,
+    });
     modalGroup = model;
     if (loadingEl) loadingEl.classList.remove('active');
     if (hintEl)    hintEl.style.opacity = '1';
@@ -3779,7 +3764,17 @@ window.addEventListener('resize', () => {
     const box = canvas.parentElement;
     const w = box.clientWidth, h = box.clientHeight;
     modalRenderer.setSize(w, h);
-    if (modalCamera) { modalCamera.aspect = w/h; modalCamera.updateProjectionMatrix(); }
+    if (modalCamera) {
+      modalCamera.aspect = w / h;
+      modalCamera.updateProjectionMatrix();
+      if (modalGroup) {
+        const isWideModel = currentProduct && (currentProduct.bladeType === 'board' || currentProduct.bladeType === 'cookware' || currentProduct.bladeType === 'none');
+        frameSceneObject(modalCamera, modalGroup, {
+          padding: isWideModel ? 1.55 : 1.25,
+          verticalOffset: 0.08,
+        });
+      }
+    }
   }
 });
 
